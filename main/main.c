@@ -715,12 +715,18 @@ static esp_err_t rom_flash_ota(const rom_entry_t *rom)
         return ESP_ERR_NO_MEM;
     }
 
-    ESP_LOGI(TAG, "Flashing %s: offset=0x%zx size=%zu → ota_0@0x%08lx",
-             rom->name, rom->app_offset, rom->app_size,
-             (unsigned long)part->address);
+    /* Write all available data from app_offset to EOF so esp_ota_end
+     * can verify the complete image — manual size calculation may
+     * undercount, causing incomplete writes and verification failure. */
+    size_t write_size = rom->file_size - rom->app_offset;
+    if (write_size > part->size) write_size = part->size;
+
+    ESP_LOGI(TAG, "Flashing %s: offset=0x%zx write=%zu → ota_0@0x%08lx",
+            rom->name, rom->app_offset, write_size,
+            (unsigned long)part->address);
 
     esp_ota_handle_t handle = 0;
-    esp_err_t err = esp_ota_begin(part, rom->app_size, &handle);
+    esp_err_t err = esp_ota_begin(part, write_size, &handle);
     if (err != ESP_OK) {
         fclose(f);
         ESP_LOGE(TAG, "esp_ota_begin: %s", esp_err_to_name(err));
@@ -741,8 +747,8 @@ static esp_err_t rom_flash_ota(const rom_entry_t *rom)
     }
 
     size_t total = 0;
-    while (total < rom->app_size) {
-        size_t want = MIN(OTA_CHUNK_SZ, rom->app_size - total);
+    while (total < write_size) {
+        size_t want = MIN(OTA_CHUNK_SZ, write_size - total);
         size_t got = fread(buf, 1, want, f);
         if (got == 0) {
             ESP_LOGE(TAG, "fread returned 0 at offset %zu", total);
@@ -761,8 +767,8 @@ static esp_err_t rom_flash_ota(const rom_entry_t *rom)
         }
         total += got;
 
-        int pct = (int)(total * 100 / rom->app_size);
-        ui_update_flash(pct, total, rom->app_size);
+        int pct = (int)(total * 100 / write_size);
+        ui_update_flash(pct, total, write_size);
 
         /* keep LVGL display alive during the write */
         lv_tick_inc(LVGL_TASK_MAX_DELAY_MS);
@@ -799,9 +805,14 @@ static void on_rom_clicked(lv_event_t *e)
 
 static void on_rom_key(lv_event_t *e)
 {
-    if (lv_event_get_key(e) == LV_KEY_ESC) {
-        lv_group_t *grp = (lv_group_t *)lv_event_get_user_data(e);
+    uint32_t key = lv_event_get_key(e);
+    lv_group_t *grp = (lv_group_t *)lv_event_get_user_data(e);
+    if (key == LV_KEY_ESC) {
         if (grp) ui_build_about(grp);
+    } else if (key == LV_KEY_UP || key == LV_KEY_LEFT) {
+        lv_group_focus_prev(grp);
+    } else if (key == LV_KEY_DOWN || key == LV_KEY_RIGHT) {
+        lv_group_focus_next(grp);
     }
 }
 
@@ -984,7 +995,7 @@ static void ui_build_about(lv_group_t *group)
     const esp_app_desc_t *desc = esp_app_get_description();
     esp_chip_info_t chip;
     esp_chip_info(&chip);
-    char info[512];
+    char info[576];
     snprintf(info, sizeof(info),
         "Xiaomiao ROM Loader\n"
         "Version: %s  Build: %s\n\n"
@@ -1000,7 +1011,9 @@ static void ui_build_about(lv_group_t *group)
         "Factory: 0x10000 (696KB)\n"
         "OTA_0:  0xC0000 (3.25MB)\n\n"
         "Burning via USB is always\n"
-        "available (GD32 UART bridge).",
+        "available (GD32 UART bridge).\n\n"
+        "Author: Jia Sui\n"
+        "github.com/jsfaint/xueersi-loader",
         desc->version,
         desc->date,
         CONFIG_IDF_TARGET, chip.revision,
@@ -1042,6 +1055,8 @@ static void ui_show_flash(const rom_entry_t *rom)
     lv_obj_set_style_pad_all(scr, 0, 0);
     lv_obj_set_flex_flow(scr, LV_FLEX_FLOW_COLUMN);
     lv_obj_set_style_pad_row(scr, 0, 0);
+    lv_obj_set_flex_align(scr, LV_FLEX_ALIGN_START,
+                        LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_START);
 
     lv_obj_t *title = lv_label_create(scr);
     apply_bar_style(title, UI_BROWN, UI_CREAM);
