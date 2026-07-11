@@ -175,6 +175,7 @@ static int         s_rom_count = 0;
 static int         s_flash_rom_idx = -1;   /* pending flash request, -1 = none */
 static btn_ctx_t   s_btn_ctxs[MAX_ROMS];
 static ota0_state_t s_ota0_state;          /* what's currently in ota_0       */
+static bool         s_flashing = false;    /* true while flash write is running */
 
 static lv_draw_buf_t          s_draw_buf3;
 static esp_lcd_panel_io_handle_t s_lcd_io_handle;
@@ -840,6 +841,7 @@ static void on_rom_clicked(lv_event_t *e)
 
 static void on_rom_key(lv_event_t *e)
 {
+    if (s_flashing) return;
     uint32_t key = lv_event_get_key(e);
     lv_group_t *grp = (lv_group_t *)lv_event_get_user_data(e);
     if (key == LV_KEY_ESC) {
@@ -979,6 +981,7 @@ static void ui_build_main(lv_group_t *group)
 
 static void on_about_key(lv_event_t *e)
 {
+    if (s_flashing) return;
     uint32_t key = lv_event_get_key(e);
     if (key == LV_KEY_ESC) {
         if (s_main_screen) {
@@ -1257,7 +1260,9 @@ static void lvgl_task(void *arg)
                 } else {
                     /* normal flash write */
                     ui_show_flash(rom);
+                    s_flashing = true;
                     esp_err_t err = rom_flash_ota(rom);
+                    s_flashing = false;
                     if (err == ESP_OK) {
                         ota0_save_state(rom);
                         ui_flash_result(true, NULL);
