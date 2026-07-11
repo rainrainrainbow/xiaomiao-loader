@@ -1,0 +1,29 @@
+# Build artifacts
+build/
+sdkconfig
+sdkconfig.old
+*.o
+*.a
+*.bin
+*.elf
+*.map
+
+# ESP-IDF
+managed_components/
+dependencies.lock
+
+# IDE / Editor
+.vscode/
+.clangd
+compile_commands.json
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+Thumbs.db
