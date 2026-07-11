@@ -1119,7 +1119,8 @@ static void ui_show_flash(const rom_entry_t *rom)
 
     /* size info */
     char szbuf[32];
-    format_size(szbuf, sizeof(szbuf), rom->app_size);
+    size_t flash_bytes = rom->file_size - rom->app_offset;
+    format_size(szbuf, sizeof(szbuf), flash_bytes);
     lv_obj_t *szlbl = lv_label_create(scr);
     lv_obj_set_width(szlbl, lv_pct(100));
     lv_obj_set_style_text_color(szlbl, lv_color_hex(UI_BROWN), 0);
