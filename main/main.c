@@ -510,6 +510,41 @@ static void sd_try_mount(void)
     }
 }
 
+static void sd_deinit(void)
+{
+    if (!s_sd_mounted || !s_sd_card)
+        return;
+
+    gpio_set_direction(PIN_NUM_SD_CS, GPIO_MODE_OUTPUT);
+    gpio_set_level(PIN_NUM_SD_CS, 1);
+
+    esp_vfs_fat_sdcard_unmount("/sdcard", s_sd_card);
+    s_sd_card = NULL;
+    s_sd_mounted = false;
+
+    /* Send 80 dummy clocks with CS high to reset the SD card
+     * into a clean idle state before handing off to the ROM. */
+    spi_device_handle_t tmp_handle;
+    spi_device_interface_config_t devcfg = {
+        .mode = 0,
+        .clock_speed_hz = 400 * 1000,
+        .spics_io_num = -1,
+        .queue_size = 1,
+    };
+    if (spi_bus_add_device(LCD_HOST, &devcfg, &tmp_handle) == ESP_OK) {
+        uint8_t dummy[10] = {0xFF};
+        spi_transaction_t t = {
+            .length = 80,
+            .tx_buffer = dummy,
+        };
+        spi_device_polling_transmit(tmp_handle, &t);
+        spi_bus_remove_device(tmp_handle);
+    }
+
+    gpio_set_level(PIN_NUM_SD_CS, 1);
+    ESP_LOGI(TAG, "SD deinitialized");
+}
+
 /* ── ROM scanning & app image parsing ──────────────────────────────────── */
 
 /**
@@ -1217,6 +1252,7 @@ static void lvgl_task(void *arg)
                     if (part)
                         esp_ota_set_boot_partition(part);
                     vTaskDelay(pdMS_TO_TICKS(800));
+                    sd_deinit();
                     esp_restart();
                 } else {
                     /* normal flash write */
@@ -1226,6 +1262,7 @@ static void lvgl_task(void *arg)
                         ota0_save_state(rom);
                         ui_flash_result(true, NULL);
                         vTaskDelay(pdMS_TO_TICKS(800));
+                        sd_deinit();
                         esp_restart();
                     } else {
                         ui_flash_result(false, esp_err_to_name(err));

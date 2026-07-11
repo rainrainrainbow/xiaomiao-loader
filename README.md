@@ -94,6 +94,20 @@ void app_main(void) {
 
 `return_to_loader.h` 在本仓库根目录。不加此代码的 ROM 仍能正常运行，但 Reset 后会重新进入该 ROM 而非 Loader。
 
+## 已知限制
+
+### Arduino IDF v4.4.7 ROM 启动崩溃
+
+通过 `arduino-lib-builder`（ESP-IDF v4.4.7）构建的 ROM 写入后会在启动阶段崩溃，随后 bootloader 反回滚机制将设备切回 Loader 列表界面。
+
+根本原因：Loader 的 bootloader（IDF v5.5.4）在加载 ROM 前初始化了 SPIRAM（`CONFIG_SPIRAM_BOOT_INIT=y`），而 IDF v4.4.7 的 startup 代码对该状态处理不兼容。
+
+**解决方案**：用与 Loader 相同版本（v5.5.4）的 ESP-IDF 重新构建 ROM。
+
+### Bootloader 反回滚
+
+当 ROM 启动崩溃时，设备不会卡死——ESP-IDF 的 OTA 反回滚机制（`CONFIG_BOOTLOADER_APP_ROLLBACK_ENABLE`）检测到 ota_0 分区未被确认有效，自动回退到 factory 分区的 Loader。因此"加载后退回列表"意味着 ROM 的 OTA 写入成功但 ROM 自身启动失败。
+
 ## 目标硬件
 
 - ESP32-WROVER-B（4MB Flash, 8MB PSRAM）
