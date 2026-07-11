@@ -1135,12 +1135,15 @@ static void ui_show_flash(const rom_entry_t *rom)
     lv_obj_set_style_bg_opa(sp2, LV_OPA_TRANSP, 0);
     lv_obj_set_style_border_width(sp2, 0, 0);
 
-    /* progress bar */
+    /* progress bar — radius 0 overrides the default theme's `circle` style,
+     * whose anti-aliased corners left a dirty fringe above the bar. */
     s_flash_bar = lv_bar_create(scr);
     lv_obj_set_width(s_flash_bar, 140);
     lv_obj_set_height(s_flash_bar, 14);
+    lv_obj_set_style_radius(s_flash_bar, 0, 0);
     lv_obj_set_style_bg_color(s_flash_bar, lv_color_hex(UI_CREAM), 0);
     lv_obj_set_style_bg_opa(s_flash_bar, LV_OPA_COVER, 0);
+    lv_obj_set_style_radius(s_flash_bar, 0, LV_PART_INDICATOR);
     lv_obj_set_style_bg_color(s_flash_bar, lv_color_hex(UI_GREEN),
                               LV_PART_INDICATOR);
     lv_bar_set_range(s_flash_bar, 0, 100);
