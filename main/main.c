@@ -523,8 +523,11 @@ static void sd_deinit(void)
     s_sd_card = NULL;
     s_sd_mounted = false;
 
-    /* Send 80 dummy clocks with CS high to reset the SD card
-     * into a clean idle state before handing off to the ROM. */
+    /* Send 80 dummy clocks with CS low to reset the SD card
+     * into a clean idle state before handing off to the ROM.
+     * CS must be low so the card actually sees the clock pulses. */
+    gpio_set_level(PIN_NUM_SD_CS, 0);
+
     spi_device_handle_t tmp_handle;
     spi_device_interface_config_t devcfg = {
         .mode = 0,
