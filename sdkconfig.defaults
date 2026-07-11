@@ -16,6 +16,9 @@ CONFIG_PARTITION_TABLE_FILENAME="partitions.csv"
 CONFIG_PARTITION_TABLE_OFFSET=0x9000
 CONFIG_COMPILER_OPTIMIZATION_PERF=y
 CONFIG_BOOTLOADER_COMPILER_OPTIMIZATION_PERF=y
+# Self-guaranteed return-to-loader: bootloader refuses to re-boot an OTA slot
+# that wasn't confirmed by the ROM. Reset/power-cycle rolls back to factory.
+CONFIG_BOOTLOADER_APP_ROLLBACK_ENABLE=y
 CONFIG_SPIRAM=y
 CONFIG_SPIRAM_MODE_QUAD=y
 CONFIG_SPIRAM_TYPE_AUTO=y
