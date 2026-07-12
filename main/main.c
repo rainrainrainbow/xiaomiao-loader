@@ -990,8 +990,12 @@ static void on_rom_key(lv_event_t *e)
         if (grp) ui_build_about(grp);
     } else if (key == LV_KEY_UP) {
         lv_group_focus_prev(grp);
+        lv_obj_t *focused = lv_group_get_focused(grp);
+        if (focused) lv_obj_scroll_to_view(focused, LV_ANIM_OFF);
     } else if (key == LV_KEY_DOWN || key == LV_KEY_RIGHT) {
         lv_group_focus_next(grp);
+        lv_obj_t *focused = lv_group_get_focused(grp);
+        if (focused) lv_obj_scroll_to_view(focused, LV_ANIM_OFF);
     }
 }
 
