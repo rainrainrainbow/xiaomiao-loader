@@ -469,6 +469,7 @@ static lv_group_t *lvgl_input_init(lv_display_t *disp)
 {
     lv_group_t *group = lv_group_create();
     lv_group_set_default(group);
+    lv_group_set_wrap(group, true);
     lv_indev_t *indev = lv_indev_create();
     lv_indev_set_type(indev, LV_INDEV_TYPE_KEYPAD);
     lv_indev_set_display(indev, disp);
@@ -615,41 +616,67 @@ static size_t rom_calc_app_size(FILE *f, size_t offset)
  * retro-core app partitions by label, so they can be written to ota_0
  * and ota_1 respectively. */
 
-#define IMG_PT_OFFSET   0x8000
+#define IMG_PT_OFFSET   0x9000
 #define IMG_PT_ENTRY_SZ 32
 #define IMG_PT_MAX      32
 
-static bool img_parse_partitions(FILE *f, rom_entry_t *r)
+static bool img_parse_at(FILE *f, rom_entry_t *r, long pt_off)
 {
-    if (fseek(f, (long)IMG_PT_OFFSET, SEEK_SET) != 0)
+    if (fseek(f, pt_off, SEEK_SET) != 0)
         return false;
 
+    /* diagnostic: show what we read at this offset */
+    uint8_t probe[4];
+    size_t got = fread(probe, 1, sizeof(probe), f);
+    ESP_LOGI(TAG, "img_parse @0x%lx: read %zu bytes: %02x %02x %02x %02x",
+             pt_off, got, probe[0], probe[1], probe[2], probe[3]);
+    fseek(f, pt_off, SEEK_SET);
+
     bool found_launcher = false, found_core = false;
+    uint32_t launcher_off = 0, core_off = 0;
     for (int i = 0; i < IMG_PT_MAX; i++) {
         uint8_t e[IMG_PT_ENTRY_SZ];
         if (fread(e, 1, IMG_PT_ENTRY_SZ, f) != IMG_PT_ENTRY_SZ)
             break;
-        /* magic bytes 0xAA 0x50; partition-md5 terminator starts 0xEB */
         if (e[0] == 0xEB) break;
         if (e[0] != 0xAA || e[1] != 0x50) break;
-        if (e[2] != 0) continue;             /* type 0 = app */
-        uint32_t off, size;
-        memcpy(&off,  &e[4],  4);            /* little-endian */
-        memcpy(&size, &e[8],  4);
+        if (e[2] != 0) continue;
+        uint32_t off;
+        memcpy(&off, &e[4], 4);
         char label[17];
         memcpy(label, &e[12], 16);
         label[16] = '\0';
+        ESP_LOGI(TAG, "  PT entry: '%s' off=0x%x", label, off);
         if (strcmp(label, "launcher") == 0) {
-            r->img_launcher_off  = off;
-            r->img_launcher_size = size;
+            launcher_off = off;
             found_launcher = true;
         } else if (strcmp(label, "retro-core") == 0) {
-            r->img_core_off  = off;
-            r->img_core_size = size;
+            core_off = off;
             found_core = true;
         }
     }
-    return found_launcher && found_core;
+    if (!found_launcher || !found_core)
+        return false;
+
+    r->img_launcher_off  = launcher_off;
+    r->img_core_off      = core_off;
+    r->img_launcher_size = rom_calc_app_size(f, launcher_off);
+    r->img_core_size     = rom_calc_app_size(f, core_off);
+    ESP_LOGI(TAG, "img_parse: launcher=%d size=%zu core=%d size=%zu",
+             found_launcher, r->img_launcher_size,
+             found_core, r->img_core_size);
+    return r->img_launcher_size > 0 && r->img_core_size > 0;
+}
+
+/* Parse retro-go .img; try current offset first, then legacy (0x8000). */
+static bool img_parse_partitions(FILE *f, rom_entry_t *r)
+{
+    if (img_parse_at(f, r, IMG_PT_OFFSET))
+        return true;
+
+    ESP_LOGI(TAG, "img_parse @0x%x failed, trying legacy offset 0x8000",
+             IMG_PT_OFFSET);
+    return img_parse_at(f, r, 0x8000);
 }
 
 static int rom_scan(void)
