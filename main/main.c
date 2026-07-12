@@ -691,7 +691,8 @@ static int rom_scan(void)
     struct dirent *ent;
     while ((ent = readdir(dir)) != NULL && count < MAX_ROMS) {
         const char *dot = strrchr(ent->d_name, '.');
-        if (!dot || strcasecmp(dot, ".bin") != 0) continue;
+        if (!dot) continue;
+        if (strcasecmp(dot, ".bin") != 0 && strcasecmp(dot, ".img") != 0) continue;
 
         rom_entry_t *r = &s_roms[count];
         memset(r, 0, sizeof(*r));
@@ -1059,8 +1060,8 @@ static void ui_build_main(lv_group_t *group)
         lv_obj_set_width(empty, lv_pct(100));
         lv_obj_set_style_text_color(empty, lv_color_hex(UI_BROWN), 0);
         lv_label_set_text(empty,
-            "No .bin files found.\n\n"
-            "Put ROM images in:\n" ROM_DIR);
+            "No ROM files found.\n\n"
+            "Put ROM images (.bin/.img) in:\n" ROM_DIR);
         lv_obj_set_style_text_align(empty, LV_TEXT_ALIGN_CENTER, 0);
     } else {
         for (int i = 0; i < s_rom_count; i++) {
