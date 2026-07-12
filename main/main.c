@@ -134,6 +134,8 @@
 #define NVS_KEY_NAME    "cur_name"
 #define NVS_KEY_FSIZE   "cur_fsize"
 
+typedef enum { ROM_SINGLE = 0, ROM_DUAL_IMG } rom_type_t;
+
 typedef struct {
     char     name[64];      /* display name (filename without .bin)       */
     char     path[280];     /* full path on SD card                        */
@@ -141,6 +143,10 @@ typedef struct {
     size_t   app_offset;    /* 0 for app-only, 0x10000 for merged bin     */
     size_t   app_size;      /* extracted app image size                    */
     bool     valid;         /* true if a valid ESP32 image was detected    */
+    /* dual-app (.img): offset/size of launcher & retro-core inside image */
+    rom_type_t type;
+    size_t   img_launcher_off, img_launcher_size;
+    size_t   img_core_off,    img_core_size;
 } rom_entry_t;
 
 typedef struct {
@@ -603,6 +609,49 @@ static size_t rom_calc_app_size(FILE *f, size_t offset)
     return pos;
 }
 
+/* ── .img (dual-app) partition table parsing ────────────────────────────
+ * retro-go's mkfw.py produces a full-flash .img with a standard ESP32
+ * partition table at 0x8000. We parse it to locate the launcher and
+ * retro-core app partitions by label, so they can be written to ota_0
+ * and ota_1 respectively. */
+
+#define IMG_PT_OFFSET   0x8000
+#define IMG_PT_ENTRY_SZ 32
+#define IMG_PT_MAX      32
+
+static bool img_parse_partitions(FILE *f, rom_entry_t *r)
+{
+    if (fseek(f, (long)IMG_PT_OFFSET, SEEK_SET) != 0)
+        return false;
+
+    bool found_launcher = false, found_core = false;
+    for (int i = 0; i < IMG_PT_MAX; i++) {
+        uint8_t e[IMG_PT_ENTRY_SZ];
+        if (fread(e, 1, IMG_PT_ENTRY_SZ, f) != IMG_PT_ENTRY_SZ)
+            break;
+        /* magic bytes 0xAA 0x50; partition-md5 terminator starts 0xEB */
+        if (e[0] == 0xEB) break;
+        if (e[0] != 0xAA || e[1] != 0x50) break;
+        if (e[2] != 0) continue;             /* type 0 = app */
+        uint32_t off, size;
+        memcpy(&off,  &e[4],  4);            /* little-endian */
+        memcpy(&size, &e[8],  4);
+        char label[17];
+        memcpy(label, &e[12], 16);
+        label[16] = '\0';
+        if (strcmp(label, "launcher") == 0) {
+            r->img_launcher_off  = off;
+            r->img_launcher_size = size;
+            found_launcher = true;
+        } else if (strcmp(label, "retro-core") == 0) {
+            r->img_core_off  = off;
+            r->img_core_size = size;
+            found_core = true;
+        }
+    }
+    return found_launcher && found_core;
+}
+
 static int rom_scan(void)
 {
     DIR *dir = opendir(ROM_DIR);
@@ -633,12 +682,18 @@ static int rom_scan(void)
 
         FILE *f = fopen(r->path, "rb");
         if (f) {
-            r->app_offset = rom_detect_app_offset(f);
-            if (r->app_offset != (size_t)-1) {
-                r->app_size = rom_calc_app_size(f, r->app_offset);
-                r->valid = (r->app_size > 0);
+            if (img_parse_partitions(f, r)) {
+                /* retro-go full-flash .img with launcher + retro-core */
+                r->type = ROM_DUAL_IMG;
+                r->valid = true;
             } else {
-                r->valid = false;
+                r->app_offset = rom_detect_app_offset(f);
+                if (r->app_offset != (size_t)-1) {
+                    r->app_size = rom_calc_app_size(f, r->app_offset);
+                    r->valid = (r->app_size > 0);
+                } else {
+                    r->valid = false;
+                }
             }
             fclose(f);
         }
@@ -731,6 +786,74 @@ static void ota0_save_state(const rom_entry_t *rom)
  *
  * Returns ESP_OK on success, or an error code.
  */
+/* Write a byte range [off, off+size) from an open file to an OTA partition.
+ * Keeps the LVGL display alive and updates the progress bar. Caller owns f. */
+static esp_err_t write_range_to_partition(FILE *f, size_t off, size_t size,
+                                          const esp_partition_t *part,
+                                          const char *label)
+{
+    if (size > part->size) {
+        ESP_LOGE(TAG, "%s: %zu bytes > partition %lu bytes",
+                 label, size, (unsigned long)part->size);
+        return ESP_ERR_NO_MEM;
+    }
+
+    ESP_LOGI(TAG, "Writing %s: off=0x%zx size=%zu → @0x%08lx",
+             label, off, size, (unsigned long)part->address);
+
+    esp_ota_handle_t handle = 0;
+    esp_err_t err = esp_ota_begin(part, size, &handle);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "esp_ota_begin: %s", esp_err_to_name(err));
+        return err;
+    }
+
+    if (fseek(f, (long)off, SEEK_SET) != 0) {
+        esp_ota_abort(handle);
+        return ESP_FAIL;
+    }
+
+    uint8_t *buf = malloc(OTA_CHUNK_SZ);
+    if (!buf) {
+        esp_ota_abort(handle);
+        return ESP_ERR_NO_MEM;
+    }
+
+    size_t total = 0;
+    while (total < size) {
+        size_t want = MIN(OTA_CHUNK_SZ, size - total);
+        size_t got = fread(buf, 1, want, f);
+        if (got == 0) {
+            ESP_LOGE(TAG, "fread returned 0 at offset %zu", total);
+            free(buf);
+            esp_ota_abort(handle);
+            return ESP_FAIL;
+        }
+        err = esp_ota_write(handle, buf, got);
+        if (err != ESP_OK) {
+            ESP_LOGE(TAG, "esp_ota_write: %s", esp_err_to_name(err));
+            free(buf);
+            esp_ota_abort(handle);
+            return err;
+        }
+        total += got;
+
+        int pct = (int)(total * 100 / size);
+        ui_update_flash(pct, total, size);
+
+        /* keep LVGL display alive during the write */
+        lv_tick_inc(LVGL_TASK_MAX_DELAY_MS);
+        lv_timer_handler();
+    }
+
+    free(buf);
+    err = esp_ota_end(handle);
+    if (err != ESP_OK)
+        ESP_LOGE(TAG, "esp_ota_end: %s", esp_err_to_name(err));
+    return err;
+}
+
+/* Single-app ROM: write app image to ota_0, set boot to ota_0. */
 static esp_err_t rom_flash_ota(const rom_entry_t *rom)
 {
     FILE *f = fopen(rom->path, "rb");
@@ -747,81 +870,13 @@ static esp_err_t rom_flash_ota(const rom_entry_t *rom)
         return ESP_ERR_NOT_FOUND;
     }
 
-    if (rom->app_size > part->size) {
-        fclose(f);
-        ESP_LOGE(TAG, "App image %zu bytes > ota_0 %lu bytes",
-                 rom->app_size, (unsigned long)part->size);
-        return ESP_ERR_NO_MEM;
-    }
-
-    /* Write all available data from app_offset to EOF so esp_ota_end
-     * can verify the complete image — manual size calculation may
-     * undercount, causing incomplete writes and verification failure. */
+    /* write from app_offset to EOF so esp_ota_end can verify the full image */
     size_t write_size = rom->file_size - rom->app_offset;
-    if (write_size > part->size) write_size = part->size;
-
-    ESP_LOGI(TAG, "Flashing %s: offset=0x%zx write=%zu → ota_0@0x%08lx",
-            rom->name, rom->app_offset, write_size,
-            (unsigned long)part->address);
-
-    esp_ota_handle_t handle = 0;
-    esp_err_t err = esp_ota_begin(part, write_size, &handle);
-    if (err != ESP_OK) {
-        fclose(f);
-        ESP_LOGE(TAG, "esp_ota_begin: %s", esp_err_to_name(err));
-        return err;
-    }
-
-    if (fseek(f, (long)rom->app_offset, SEEK_SET) != 0) {
-        esp_ota_abort(handle);
-        fclose(f);
-        return ESP_FAIL;
-    }
-
-    uint8_t *buf = malloc(OTA_CHUNK_SZ);
-    if (!buf) {
-        esp_ota_abort(handle);
-        fclose(f);
-        return ESP_ERR_NO_MEM;
-    }
-
-    size_t total = 0;
-    while (total < write_size) {
-        size_t want = MIN(OTA_CHUNK_SZ, write_size - total);
-        size_t got = fread(buf, 1, want, f);
-        if (got == 0) {
-            ESP_LOGE(TAG, "fread returned 0 at offset %zu", total);
-            free(buf);
-            esp_ota_abort(handle);
-            fclose(f);
-            return ESP_FAIL;
-        }
-        err = esp_ota_write(handle, buf, got);
-        if (err != ESP_OK) {
-            ESP_LOGE(TAG, "esp_ota_write: %s", esp_err_to_name(err));
-            free(buf);
-            esp_ota_abort(handle);
-            fclose(f);
-            return err;
-        }
-        total += got;
-
-        int pct = (int)(total * 100 / write_size);
-        ui_update_flash(pct, total, write_size);
-
-        /* keep LVGL display alive during the write */
-        lv_tick_inc(LVGL_TASK_MAX_DELAY_MS);
-        lv_timer_handler();
-    }
-
-    free(buf);
+    esp_err_t err = write_range_to_partition(f, rom->app_offset, write_size,
+                                             part, rom->name);
     fclose(f);
-
-    err = esp_ota_end(handle);
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "esp_ota_end: %s", esp_err_to_name(err));
+    if (err != ESP_OK)
         return err;
-    }
 
     err = esp_ota_set_boot_partition(part);
     if (err != ESP_OK) {
@@ -830,6 +885,50 @@ static esp_err_t rom_flash_ota(const rom_entry_t *rom)
     }
 
     ESP_LOGI(TAG, "OTA write complete, rebooting into %s", rom->name);
+    return ESP_OK;
+}
+
+/* Dual-app (.img) ROM: write launcher→ota_0 and retro-core→ota_1, then set
+ * boot to ota_0 (launcher) so retro-go can OTA-switch to ota_1 itself. */
+static esp_err_t rom_flash_dual(const rom_entry_t *rom)
+{
+    FILE *f = fopen(rom->path, "rb");
+    if (!f) {
+        ESP_LOGE(TAG, "Cannot open %s", rom->path);
+        return ESP_ERR_NOT_FOUND;
+    }
+
+    const esp_partition_t *ota0 = esp_partition_find_first(
+        ESP_PARTITION_TYPE_APP, ESP_PARTITION_SUBTYPE_APP_OTA_0, NULL);
+    const esp_partition_t *ota1 = esp_partition_find_first(
+        ESP_PARTITION_TYPE_APP, ESP_PARTITION_SUBTYPE_APP_OTA_1, NULL);
+    if (!ota0 || !ota1) {
+        fclose(f);
+        ESP_LOGE(TAG, "ota_0/ota_1 not found (ota0=%p ota1=%p)", ota0, ota1);
+        return ESP_ERR_NOT_FOUND;
+    }
+
+    esp_err_t err = write_range_to_partition(f, rom->img_launcher_off,
+                                             rom->img_launcher_size,
+                                             ota0, "launcher");
+    if (err != ESP_OK) {
+        fclose(f);
+        return err;
+    }
+
+    err = write_range_to_partition(f, rom->img_core_off, rom->img_core_size,
+                                   ota1, "retro-core");
+    fclose(f);
+    if (err != ESP_OK)
+        return err;
+
+    err = esp_ota_set_boot_partition(ota0);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "esp_ota_set_boot_partition: %s", esp_err_to_name(err));
+        return err;
+    }
+
+    ESP_LOGI(TAG, "Dual-app write complete, rebooting into %s", rom->name);
     return ESP_OK;
 }
 
@@ -1268,7 +1367,9 @@ static void lvgl_task(void *arg)
                     /* normal flash write */
                     ui_show_flash(rom);
                     s_flashing = true;
-                    esp_err_t err = rom_flash_ota(rom);
+                    esp_err_t err = (rom->type == ROM_DUAL_IMG)
+                                     ? rom_flash_dual(rom)
+                                     : rom_flash_ota(rom);
                     s_flashing = false;
                     if (err == ESP_OK) {
                         ota0_save_state(rom);
