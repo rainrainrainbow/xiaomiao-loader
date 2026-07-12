@@ -985,9 +985,9 @@ static void on_rom_key(lv_event_t *e)
     if (s_flashing) return;
     uint32_t key = lv_event_get_key(e);
     lv_group_t *grp = (lv_group_t *)lv_event_get_user_data(e);
-    if (key == LV_KEY_ESC) {
+    if (key == LV_KEY_LEFT) {
         if (grp) ui_build_about(grp);
-    } else if (key == LV_KEY_UP || key == LV_KEY_LEFT) {
+    } else if (key == LV_KEY_UP) {
         lv_group_focus_prev(grp);
     } else if (key == LV_KEY_DOWN || key == LV_KEY_RIGHT) {
         lv_group_focus_next(grp);
@@ -1112,7 +1112,7 @@ static void ui_build_main(lv_group_t *group)
     lv_obj_t *hint = lv_label_create(scr);
     apply_bar_style(hint, UI_BROWN, UI_CREAM);
     lv_obj_set_width(hint, lv_pct(100));
-    lv_label_set_text(hint, "A:Load  B:About");
+    lv_label_set_text(hint, "A:Load  Left:About");
     lv_obj_set_style_text_align(hint, LV_TEXT_ALIGN_CENTER, 0);
 
     lv_screen_load(scr);
@@ -1124,7 +1124,7 @@ static void on_about_key(lv_event_t *e)
 {
     if (s_flashing) return;
     uint32_t key = lv_event_get_key(e);
-    if (key == LV_KEY_ESC) {
+    if (key == LV_KEY_LEFT) {
         if (s_main_screen) {
             lv_screen_load(s_main_screen);
             if (s_rom_count > 0 && s_rom_btns[0])
@@ -1215,7 +1215,7 @@ static void ui_build_about(lv_group_t *group)
     lv_obj_t *hint = lv_label_create(scr);
     apply_bar_style(hint, UI_BROWN, UI_CREAM);
     lv_obj_set_width(hint, lv_pct(100));
-    lv_label_set_text(hint, "B: Back");
+    lv_label_set_text(hint, "Left: Back");
     lv_obj_set_style_text_align(hint, LV_TEXT_ALIGN_CENTER, 0);
 
     lv_screen_load(scr);

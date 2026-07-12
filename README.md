@@ -69,7 +69,7 @@ esptool.py --chip esp32 -b 460800 write_flash 0x0 build/xiaomiao-loader-merged.b
 2. 插入 TF 卡，开机进入 Loader
 3. 上下键选择 ROM，A 键加载
 4. 已加载的 ROM 前面显示 `>` 标记，重复选择时跳过写入
-5. B 键查看系统信息
+5. 左键查看系统信息
 
 ## ROM 兼容性
 
