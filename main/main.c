@@ -1192,7 +1192,7 @@ static void ui_build_about(lv_group_t *group)
         "Burning via USB is always\n"
         "available (GD32 UART bridge).\n\n"
         "Author: Jia Sui\n"
-        "github.com/jsfaint/xueersi-loader",
+        "github.com/jsfaint/xiaomiao-loader",
         desc->version,
         desc->date,
         CONFIG_IDF_TARGET, chip.revision,
