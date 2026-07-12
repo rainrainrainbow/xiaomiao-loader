@@ -13,12 +13,13 @@ CONFIG_ESPTOOLPY_FLASHSIZE="4MB"
 CONFIG_PARTITION_TABLE_CUSTOM=y
 CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions.csv"
 CONFIG_PARTITION_TABLE_FILENAME="partitions.csv"
-CONFIG_PARTITION_TABLE_OFFSET=0x9000
+CONFIG_PARTITION_TABLE_OFFSET=0x8000
 CONFIG_COMPILER_OPTIMIZATION_PERF=y
-CONFIG_BOOTLOADER_COMPILER_OPTIMIZATION_PERF=y
-# Self-guaranteed return-to-loader: bootloader refuses to re-boot an OTA slot
-# that wasn't confirmed by the ROM. Reset/power-cycle rolls back to factory.
-CONFIG_BOOTLOADER_APP_ROLLBACK_ENABLE=y
+CONFIG_BOOTLOADER_COMPILER_OPTIMIZATION_SIZE=y
+# Rollback DISABLED: it marks OTA-written cores PENDING_VERIFY, which makes
+# retro-go's have_app() treat them as absent. Return-to-loader relies on
+# GPIO factory reset (hold B / GPIO12 on reset) instead.
+# CONFIG_BOOTLOADER_APP_ROLLBACK_ENABLE is not set
 CONFIG_SPIRAM=y
 CONFIG_SPIRAM_MODE_QUAD=y
 CONFIG_SPIRAM_TYPE_AUTO=y

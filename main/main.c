@@ -949,9 +949,21 @@ static esp_err_t rom_flash_dual(const rom_entry_t *rom)
     if (err != ESP_OK)
         return err;
 
+    /* Register retro-core in otadata before selecting launcher.
+     * retro-go's have_app() reads the OTA state of the core partition;
+     * an ota_1 that was never selected via set_boot_partition stays
+     * unregistered (blank otadata entry) and is reported "not present".
+     * set_boot(ota1) records ota_1's seq, then set_boot(ota0) makes
+     * launcher the active boot target. */
+    err = esp_ota_set_boot_partition(ota1);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "esp_ota_set_boot_partition(ota1): %s", esp_err_to_name(err));
+        return err;
+    }
+
     err = esp_ota_set_boot_partition(ota0);
     if (err != ESP_OK) {
-        ESP_LOGE(TAG, "esp_ota_set_boot_partition: %s", esp_err_to_name(err));
+        ESP_LOGE(TAG, "esp_ota_set_boot_partition(ota0): %s", esp_err_to_name(err));
         return err;
     }
 

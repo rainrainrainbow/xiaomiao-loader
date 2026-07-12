@@ -76,8 +76,20 @@ esptool.py --chip esp32 -b 460800 write_flash 0x0 build/xiaomiao-loader-merged.b
 Loader 自动识别两种格式：
 - **Merged bin**（app 在 0x10000）：自动提取 app 段
 - **App-only bin**（app 在 0x0）：直接写入
+- **Full-flash 镜像**（分区表 @0x8000 + bootloader @0x1000）：retro-go `.img`/`.bin`，自动解析内嵌分区表，launcher → ota_0，retro-core → ota_1
 
-ROM 大小上限：3.25MB。
+ROM 大小上限：3.25MB（ota_0）。
+
+### retro-go 双 app 加载
+
+Loader 能直接加载从网络下载的 retro-go 完整镜像（无需重新编译）。启动后：
+
+- launcher 写入 `ota_0`，模拟器核心（retro-core/gbsp/gwenesis/fmsx）写入 `ota_1`
+- launcher 启动后自动识别 ota_1 上的核心，按 SD 卡的 ROM 列表生成模拟器 tab
+- 选游戏后 launcher 通过 OTA 切换到 retro-core 运行
+- SD 卡在每次 bootloader 启动时复位，确保 retro-core 能正常挂载 TF 卡
+
+**分区表 offset 约束**：Loader 的 `CONFIG_PARTITION_TABLE_OFFSET` 必须和 retro-go 一致（0x8000）。这是 ESP-IDF 的编译时常量——如果两者不一致，retro-go launcher 会读不到分区表。Loader 通过缩小 bootloader 释出 0x8000 位置来满足此约束。
 
 ### 让 ROM 支持"Reset 回到 Loader"
 

@@ -5,6 +5,7 @@ sdkconfig.old
 *.o
 *.a
 *.bin
+*.img
 *.elf
 *.map
 
