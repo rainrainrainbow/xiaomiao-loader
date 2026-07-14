@@ -193,6 +193,7 @@ static volatile bool s_lcd_first_flush_done;
 static bool s_lcd_display_on;
 
 /* UI screen tracking */
+static lv_obj_t *s_splash_screen;
 static lv_obj_t *s_main_screen;
 static lv_obj_t *s_about_screen;
 static lv_obj_t *s_rom_btns[MAX_ROMS];
@@ -200,6 +201,7 @@ static lv_obj_t *s_about_area;
 
 /* ── Forward declarations ──────────────────────────────────────────────── */
 
+static void ui_build_splash(void);
 static void ui_build_main(lv_group_t *group);
 static void ui_build_about(lv_group_t *group);
 static void ui_show_flash(const rom_entry_t *rom);
@@ -215,8 +217,9 @@ static void format_size(char *buf, size_t bufsz, size_t bytes)
         snprintf(buf, bufsz, "%lu.%luMB",
                  (unsigned long)(bytes / (1024 * 1024)),
                  (unsigned long)((bytes / (1024 * 102)) % 10));
-    else
+    else {
         snprintf(buf, bufsz, "%luKB", (unsigned long)(bytes / 1024));
+    }
 }
 
 /* ── Buttons ───────────────────────────────────────────────────────────── */
@@ -228,8 +231,9 @@ static void buttons_init(void)
 
     for (size_t i = 0; i < NUM_BUTTONS; ++i) {
         pin_mask |= 1ULL << s_btn_gpios[i];
-        if (s_btn_gpios[i] != GPIO_NUM_34 && s_btn_gpios[i] != GPIO_NUM_35)
+        if (s_btn_gpios[i] != GPIO_NUM_34 && s_btn_gpios[i] != GPIO_NUM_35) {
             pullup_mask |= 1ULL << s_btn_gpios[i];
+        }
     }
 
     gpio_config_t io_conf = {
@@ -273,10 +277,13 @@ static void keypad_read_cb(lv_indev_t *indev, lv_indev_data_t *data)
     if (raw != last_raw) {
         last_raw = raw;
         raw_changed_ms = now;
-        if (raw < 0) stable = -1;
+        if (raw < 0) {
+            stable = -1;
+        }
     }
-    if (lv_tick_elaps(raw_changed_ms) >= BUTTON_DEBOUNCE_MS)
+    if (lv_tick_elaps(raw_changed_ms) >= BUTTON_DEBOUNCE_MS) {
         stable = last_raw;
+    }
 
     if (stable >= 0) {
         last_key = s_btn_keys[stable];
@@ -331,10 +338,12 @@ static void st7735_init_black_tab_rot90(esp_lcd_panel_io_handle_t io)
     const uint8_t colmod[]   = {0x05};
     const uint8_t caset[]    = {0x00, 0x00, 0x00, LCD_NATIVE_H_RES - 1};
     const uint8_t raset[]    = {0x00, 0x00, 0x00, LCD_NATIVE_V_RES - 1};
-    const uint8_t gp[] = {0x02,0x1C,0x07,0x12,0x37,0x32,0x29,0x2D,
-                          0x29,0x25,0x2B,0x39,0x00,0x01,0x03,0x10};
-    const uint8_t gn[] = {0x03,0x1D,0x07,0x06,0x2E,0x2C,0x29,0x2D,
-                          0x2E,0x2E,0x37,0x3F,0x00,0x00,0x02,0x10};
+    const uint8_t gp[] = {0x02, 0x1C, 0x07, 0x12, 0x37, 0x32, 0x29, 0x2D,
+                          0x29, 0x25, 0x2B, 0x39, 0x00, 0x01, 0x03, 0x10
+                         };
+    const uint8_t gn[] = {0x03, 0x1D, 0x07, 0x06, 0x2E, 0x2C, 0x29, 0x2D,
+                          0x2E, 0x2E, 0x37, 0x3F, 0x00, 0x00, 0x02, 0x10
+                         };
     const uint8_t madctl_r[] = {MADCTL_MX | MADCTL_MV | MADCTL_RGB};
 
     st7735_tx_param(io, ST7735_DISPOFF, NULL, 0);
@@ -367,7 +376,9 @@ static void st7735_init_black_tab_rot90(esp_lcd_panel_io_handle_t io)
 
 static void lcd_display_on(void)
 {
-    if (s_lcd_display_on || !s_lcd_io_handle) return;
+    if (s_lcd_display_on || !s_lcd_io_handle) {
+        return;
+    }
     st7735_tx_param(s_lcd_io_handle, ST7735_DISPON, NULL, 0);
     st7735_delay_ms(20);
     s_lcd_display_on = true;
@@ -397,7 +408,7 @@ static esp_lcd_panel_io_handle_t lcd_init(void)
         .trans_queue_depth = 10,
     };
     ESP_ERROR_CHECK(esp_lcd_new_panel_io_spi(
-        (esp_lcd_spi_bus_handle_t)LCD_HOST, &io_cfg, &io));
+                        (esp_lcd_spi_bus_handle_t)LCD_HOST, &io_cfg, &io));
     s_lcd_io_handle = io;
     s_lcd_display_on = false;
     s_lcd_first_flush_done = false;
@@ -484,7 +495,9 @@ static lv_group_t *lvgl_input_init(lv_display_t *disp)
 
 static void sd_try_mount(void)
 {
-    if (s_sd_mounted) return;
+    if (s_sd_mounted) {
+        return;
+    }
 
     sdmmc_host_t host = SDSPI_HOST_DEFAULT();
     host.slot = LCD_HOST;
@@ -520,8 +533,9 @@ static void sd_try_mount(void)
 
 static void sd_deinit(void)
 {
-    if (!s_sd_mounted || !s_sd_card)
+    if (!s_sd_mounted || !s_sd_card) {
         return;
+    }
 
     gpio_set_direction(PIN_NUM_SD_CS, GPIO_MODE_OUTPUT);
     gpio_set_level(PIN_NUM_SD_CS, 1);
@@ -566,15 +580,27 @@ static void sd_deinit(void)
 static size_t rom_detect_app_offset(FILE *f)
 {
     uint8_t b0, b_merged;
-    if (fseek(f, 0, SEEK_SET) != 0) return (size_t)-1;
-    if (fread(&b0, 1, 1, f) != 1) return (size_t)-1;
-    if (b0 == ESP_IMAGE_MAGIC) return 0;
+    if (fseek(f, 0, SEEK_SET) != 0) {
+        return (size_t) -1;
+    }
+    if (fread(&b0, 1, 1, f) != 1) {
+        return (size_t) -1;
+    }
+    if (b0 == ESP_IMAGE_MAGIC) {
+        return 0;
+    }
 
-    if (fseek(f, APP_OFFSET_MERGED, SEEK_SET) != 0) return (size_t)-1;
-    if (fread(&b_merged, 1, 1, f) != 1) return (size_t)-1;
-    if (b_merged == ESP_IMAGE_MAGIC) return APP_OFFSET_MERGED;
+    if (fseek(f, APP_OFFSET_MERGED, SEEK_SET) != 0) {
+        return (size_t) -1;
+    }
+    if (fread(&b_merged, 1, 1, f) != 1) {
+        return (size_t) -1;
+    }
+    if (b_merged == ESP_IMAGE_MAGIC) {
+        return APP_OFFSET_MERGED;
+    }
 
-    return (size_t)-1;
+    return (size_t) -1;
 }
 
 /**
@@ -584,9 +610,15 @@ static size_t rom_detect_app_offset(FILE *f)
 static size_t rom_calc_app_size(FILE *f, size_t offset)
 {
     uint8_t hdr[24];
-    if (fseek(f, (long)offset, SEEK_SET) != 0) return 0;
-    if (fread(hdr, 1, sizeof(hdr), f) != sizeof(hdr)) return 0;
-    if (hdr[0] != ESP_IMAGE_MAGIC) return 0;
+    if (fseek(f, (long)offset, SEEK_SET) != 0) {
+        return 0;
+    }
+    if (fread(hdr, 1, sizeof(hdr), f) != sizeof(hdr)) {
+        return 0;
+    }
+    if (hdr[0] != ESP_IMAGE_MAGIC) {
+        return 0;
+    }
 
     uint8_t seg_count = hdr[1];
     uint8_t hash_appended = hdr[23];
@@ -594,8 +626,12 @@ static size_t rom_calc_app_size(FILE *f, size_t offset)
     size_t pos = sizeof(hdr);   /* 24 bytes for header */
     for (uint8_t i = 0; i < seg_count; i++) {
         uint8_t sh[8];
-        if (fseek(f, (long)(offset + pos), SEEK_SET) != 0) return 0;
-        if (fread(sh, 1, sizeof(sh), f) != sizeof(sh)) return 0;
+        if (fseek(f, (long)(offset + pos), SEEK_SET) != 0) {
+            return 0;
+        }
+        if (fread(sh, 1, sizeof(sh), f) != sizeof(sh)) {
+            return 0;
+        }
         uint32_t seg_len;
         memcpy(&seg_len, &sh[4], 4);
         pos += sizeof(sh) + seg_len;
@@ -605,7 +641,9 @@ static size_t rom_calc_app_size(FILE *f, size_t offset)
     pos = (pos + 15) & ~(size_t)15;
     pos += 1;                                       /* checksum byte */
     pos = (pos + 15) & ~(size_t)15;
-    if (hash_appended) pos += 32;                   /* SHA-256 */
+    if (hash_appended) {
+        pos += 32;    /* SHA-256 */
+    }
 
     return pos;
 }
@@ -622,8 +660,9 @@ static size_t rom_calc_app_size(FILE *f, size_t offset)
 
 static bool img_parse_at(FILE *f, rom_entry_t *r, long pt_off)
 {
-    if (fseek(f, pt_off, SEEK_SET) != 0)
+    if (fseek(f, pt_off, SEEK_SET) != 0) {
         return false;
+    }
 
     /* diagnostic: show what we read at this offset */
     uint8_t probe[4];
@@ -636,11 +675,18 @@ static bool img_parse_at(FILE *f, rom_entry_t *r, long pt_off)
     uint32_t launcher_off = 0, core_off = 0;
     for (int i = 0; i < IMG_PT_MAX; i++) {
         uint8_t e[IMG_PT_ENTRY_SZ];
-        if (fread(e, 1, IMG_PT_ENTRY_SZ, f) != IMG_PT_ENTRY_SZ)
+        if (fread(e, 1, IMG_PT_ENTRY_SZ, f) != IMG_PT_ENTRY_SZ) {
             break;
-        if (e[0] == 0xEB) break;
-        if (e[0] != 0xAA || e[1] != 0x50) break;
-        if (e[2] != 0) continue;
+        }
+        if (e[0] == 0xEB) {
+            break;
+        }
+        if (e[0] != 0xAA || e[1] != 0x50) {
+            break;
+        }
+        if (e[2] != 0) {
+            continue;
+        }
         uint32_t off;
         memcpy(&off, &e[4], 4);
         char label[17];
@@ -655,8 +701,9 @@ static bool img_parse_at(FILE *f, rom_entry_t *r, long pt_off)
             found_core = true;
         }
     }
-    if (!found_launcher || !found_core)
+    if (!found_launcher || !found_core) {
         return false;
+    }
 
     r->img_launcher_off  = launcher_off;
     r->img_core_off      = core_off;
@@ -671,8 +718,9 @@ static bool img_parse_at(FILE *f, rom_entry_t *r, long pt_off)
 /* Parse retro-go .img; try current offset first, then legacy (0x8000). */
 static bool img_parse_partitions(FILE *f, rom_entry_t *r)
 {
-    if (img_parse_at(f, r, IMG_PT_OFFSET))
+    if (img_parse_at(f, r, IMG_PT_OFFSET)) {
         return true;
+    }
 
     ESP_LOGI(TAG, "img_parse @0x%x failed, trying legacy offset 0x8000",
              IMG_PT_OFFSET);
@@ -691,8 +739,12 @@ static int rom_scan(void)
     struct dirent *ent;
     while ((ent = readdir(dir)) != NULL && count < MAX_ROMS) {
         const char *dot = strrchr(ent->d_name, '.');
-        if (!dot) continue;
-        if (strcasecmp(dot, ".bin") != 0 && strcasecmp(dot, ".img") != 0) continue;
+        if (!dot) {
+            continue;
+        }
+        if (strcasecmp(dot, ".bin") != 0 && strcasecmp(dot, ".img") != 0) {
+            continue;
+        }
 
         rom_entry_t *r = &s_roms[count];
         memset(r, 0, sizeof(*r));
@@ -700,13 +752,16 @@ static int rom_scan(void)
         snprintf(r->path, sizeof(r->path), "%s/%s", ROM_DIR, ent->d_name);
 
         size_t name_len = (size_t)(dot - ent->d_name);
-        if (name_len >= sizeof(r->name)) name_len = sizeof(r->name) - 1;
+        if (name_len >= sizeof(r->name)) {
+            name_len = sizeof(r->name) - 1;
+        }
         memcpy(r->name, ent->d_name, name_len);
         r->name[name_len] = '\0';
 
         struct stat st;
-        if (stat(r->path, &st) == 0)
+        if (stat(r->path, &st) == 0) {
             r->file_size = (size_t)st.st_size;
+        }
 
         FILE *f = fopen(r->path, "rb");
         if (f) {
@@ -716,7 +771,7 @@ static int rom_scan(void)
                 r->valid = true;
             } else {
                 r->app_offset = rom_detect_app_offset(f);
-                if (r->app_offset != (size_t)-1) {
+                if (r->app_offset != (size_t) -1) {
                     r->app_size = rom_calc_app_size(f, r->app_offset);
                     r->valid = (r->app_size > 0);
                 } else {
@@ -747,16 +802,24 @@ static void ota0_load_state(void)
 
     /* verify ota_0 partition has a real app image (not erased) */
     const esp_partition_t *part = esp_partition_find_first(
-        ESP_PARTITION_TYPE_APP, ESP_PARTITION_SUBTYPE_APP_OTA_0, NULL);
-    if (!part) return;
+                                      ESP_PARTITION_TYPE_APP, ESP_PARTITION_SUBTYPE_APP_OTA_0, NULL);
+    if (!part) {
+        return;
+    }
 
     uint8_t magic = 0xFF;
-    if (esp_partition_read(part, 0, &magic, 1) != ESP_OK) return;
-    if (magic != ESP_IMAGE_MAGIC) return;
+    if (esp_partition_read(part, 0, &magic, 1) != ESP_OK) {
+        return;
+    }
+    if (magic != ESP_IMAGE_MAGIC) {
+        return;
+    }
 
     /* read the NVS record for name + size */
     nvs_handle_t h;
-    if (nvs_open(NVS_NS_LOADER, NVS_READONLY, &h) != ESP_OK) return;
+    if (nvs_open(NVS_NS_LOADER, NVS_READONLY, &h) != ESP_OK) {
+        return;
+    }
 
     size_t name_len = sizeof(s_ota0_state.name);
     if (nvs_get_str(h, NVS_KEY_NAME, s_ota0_state.name, &name_len) != ESP_OK) {
@@ -784,7 +847,9 @@ static void ota0_load_state(void)
  */
 static bool ota0_rom_matches(const rom_entry_t *rom)
 {
-    if (!s_ota0_state.valid) return false;
+    if (!s_ota0_state.valid) {
+        return false;
+    }
     return strcmp(rom->name, s_ota0_state.name) == 0 &&
            rom->file_size == s_ota0_state.file_size;
 }
@@ -876,8 +941,9 @@ static esp_err_t write_range_to_partition(FILE *f, size_t off, size_t size,
 
     free(buf);
     err = esp_ota_end(handle);
-    if (err != ESP_OK)
+    if (err != ESP_OK) {
         ESP_LOGE(TAG, "esp_ota_end: %s", esp_err_to_name(err));
+    }
     return err;
 }
 
@@ -891,7 +957,7 @@ static esp_err_t rom_flash_ota(const rom_entry_t *rom)
     }
 
     const esp_partition_t *part = esp_partition_find_first(
-        ESP_PARTITION_TYPE_APP, ESP_PARTITION_SUBTYPE_APP_OTA_0, NULL);
+                                      ESP_PARTITION_TYPE_APP, ESP_PARTITION_SUBTYPE_APP_OTA_0, NULL);
     if (!part) {
         fclose(f);
         ESP_LOGE(TAG, "ota_0 partition not found");
@@ -903,8 +969,9 @@ static esp_err_t rom_flash_ota(const rom_entry_t *rom)
     esp_err_t err = write_range_to_partition(f, rom->app_offset, write_size,
                                              part, rom->name);
     fclose(f);
-    if (err != ESP_OK)
+    if (err != ESP_OK) {
         return err;
+    }
 
     err = esp_ota_set_boot_partition(part);
     if (err != ESP_OK) {
@@ -927,9 +994,9 @@ static esp_err_t rom_flash_dual(const rom_entry_t *rom)
     }
 
     const esp_partition_t *ota0 = esp_partition_find_first(
-        ESP_PARTITION_TYPE_APP, ESP_PARTITION_SUBTYPE_APP_OTA_0, NULL);
+                                      ESP_PARTITION_TYPE_APP, ESP_PARTITION_SUBTYPE_APP_OTA_0, NULL);
     const esp_partition_t *ota1 = esp_partition_find_first(
-        ESP_PARTITION_TYPE_APP, ESP_PARTITION_SUBTYPE_APP_OTA_1, NULL);
+                                      ESP_PARTITION_TYPE_APP, ESP_PARTITION_SUBTYPE_APP_OTA_1, NULL);
     if (!ota0 || !ota1) {
         fclose(f);
         ESP_LOGE(TAG, "ota_0/ota_1 not found (ota0=%p ota1=%p)", ota0, ota1);
@@ -947,8 +1014,9 @@ static esp_err_t rom_flash_dual(const rom_entry_t *rom)
     err = write_range_to_partition(f, rom->img_core_off, rom->img_core_size,
                                    ota1, "retro-core");
     fclose(f);
-    if (err != ESP_OK)
+    if (err != ESP_OK) {
         return err;
+    }
 
     /* Register retro-core in otadata before selecting launcher.
      * retro-go's have_app() reads the OTA state of the core partition;
@@ -972,30 +1040,70 @@ static esp_err_t rom_flash_dual(const rom_entry_t *rom)
     return ESP_OK;
 }
 
+/* ── UI: splash screen (boot logo) ─────────────────────────────────────── */
+
+static void ui_build_splash(void)
+{
+    lv_obj_t *scr = lv_obj_create(NULL);
+    s_splash_screen = scr;
+    lv_obj_set_style_bg_color(scr, lv_color_hex(UI_YELLOW), 0);
+    lv_obj_set_style_bg_opa(scr, LV_OPA_COVER, 0);
+    lv_obj_set_style_pad_all(scr, 0, 0);
+    lv_obj_set_flex_flow(scr, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_flex_align(scr, LV_FLEX_ALIGN_CENTER,
+                          LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+
+    lv_obj_t *title = lv_label_create(scr);
+    lv_obj_set_style_text_color(title, lv_color_hex(UI_BROWN), 0);
+    lv_obj_set_style_text_font(title, &lv_font_montserrat_14, 0);
+    lv_label_set_text(title, "XIAOMIAO");
+
+    lv_obj_t *subtitle = lv_label_create(scr);
+    lv_obj_set_style_text_color(subtitle, lv_color_hex(UI_BROWN), 0);
+    lv_obj_set_style_text_font(subtitle, &lv_font_montserrat_12, 0);
+    lv_label_set_text(subtitle, "ROM LOADER");
+
+    lv_obj_t *loading = lv_label_create(scr);
+    lv_obj_set_style_text_color(loading, lv_color_hex(UI_BROWN), 0);
+    lv_obj_set_style_text_font(loading, &lv_font_montserrat_12, 0);
+    lv_label_set_text(loading, "Loading...");
+
+    lv_screen_load(scr);
+}
+
 /* ── UI: main screen (ROM list) ────────────────────────────────────────── */
 
 static void on_rom_clicked(lv_event_t *e)
 {
     btn_ctx_t *ctx = (btn_ctx_t *)lv_event_get_user_data(e);
-    if (ctx && ctx->rom_index >= 0 && ctx->rom_index < s_rom_count)
+    if (ctx && ctx->rom_index >= 0 && ctx->rom_index < s_rom_count) {
         s_flash_rom_idx = ctx->rom_index;
+    }
 }
 
 static void on_rom_key(lv_event_t *e)
 {
-    if (s_flashing) return;
+    if (s_flashing) {
+        return;
+    }
     uint32_t key = lv_event_get_key(e);
     lv_group_t *grp = (lv_group_t *)lv_event_get_user_data(e);
     if (key == LV_KEY_LEFT) {
-        if (grp) ui_build_about(grp);
+        if (grp) {
+            ui_build_about(grp);
+        }
     } else if (key == LV_KEY_UP) {
         lv_group_focus_prev(grp);
         lv_obj_t *focused = lv_group_get_focused(grp);
-        if (focused) lv_obj_scroll_to_view(focused, LV_ANIM_OFF);
+        if (focused) {
+            lv_obj_scroll_to_view(focused, LV_ANIM_OFF);
+        }
     } else if (key == LV_KEY_DOWN || key == LV_KEY_RIGHT) {
         lv_group_focus_next(grp);
         lv_obj_t *focused = lv_group_get_focused(grp);
-        if (focused) lv_obj_scroll_to_view(focused, LV_ANIM_OFF);
+        if (focused) {
+            lv_obj_scroll_to_view(focused, LV_ANIM_OFF);
+        }
     }
 }
 
@@ -1012,8 +1120,9 @@ static void ui_build_main(lv_group_t *group)
 {
     if (s_main_screen) {
         lv_screen_load(s_main_screen);
-        if (s_rom_count > 0 && s_rom_btns[0])
+        if (s_rom_count > 0 && s_rom_btns[0]) {
             lv_group_focus_obj(s_rom_btns[0]);
+        }
         return;
     }
 
@@ -1064,8 +1173,8 @@ static void ui_build_main(lv_group_t *group)
         lv_obj_set_width(empty, lv_pct(100));
         lv_obj_set_style_text_color(empty, lv_color_hex(UI_BROWN), 0);
         lv_label_set_text(empty,
-            "No ROM files found.\n\n"
-            "Put ROM images (.bin/.img) in:\n" ROM_DIR);
+                          "No ROM files found.\n\n"
+                          "Put ROM images (.bin/.img) in:\n" ROM_DIR);
         lv_obj_set_style_text_align(empty, LV_TEXT_ALIGN_CENTER, 0);
     } else {
         for (int i = 0; i < s_rom_count; i++) {
@@ -1109,8 +1218,9 @@ static void ui_build_main(lv_group_t *group)
             lv_group_add_obj(group, btn);
         }
         /* focus first ROM so user can navigate immediately */
-        if (s_rom_count > 0)
+        if (s_rom_count > 0) {
             lv_group_focus_obj(s_rom_btns[0]);
+        }
     }
 
     /* Hint bar */
@@ -1127,13 +1237,16 @@ static void ui_build_main(lv_group_t *group)
 
 static void on_about_key(lv_event_t *e)
 {
-    if (s_flashing) return;
+    if (s_flashing) {
+        return;
+    }
     uint32_t key = lv_event_get_key(e);
     if (key == LV_KEY_LEFT) {
         if (s_main_screen) {
             lv_screen_load(s_main_screen);
-            if (s_rom_count > 0 && s_rom_btns[0])
+            if (s_rom_count > 0 && s_rom_btns[0]) {
                 lv_group_focus_obj(s_rom_btns[0]);
+            }
         }
     } else if (key == LV_KEY_UP && s_about_area) {
         lv_obj_scroll_by(s_about_area, 0, 20, LV_ANIM_ON);
@@ -1181,31 +1294,31 @@ static void ui_build_about(lv_group_t *group)
     esp_chip_info(&chip);
     char info[576];
     snprintf(info, sizeof(info),
-        "Xiaomiao ROM Loader\n"
-        "Version: %s  Build: %s\n\n"
-        "Chip: %s rev %d\n"
-        "IDF: %s\n"
-        "Cores: %d  CPU: %dMHz\n\n"
-        "Flash: 4MB QIO 80MHz\n"
-        "PSRAM: 8MB (VSPI)\n"
-        "LCD: ST7735 %dx%d\n"
-        "SD: %s %luMB\n\n"
-        "ROMs: %s\n"
-        "ROMs found: %d\n\n"
-        "Factory: 0x10000 (568KB)\n"
-        "OTA_0:  0xA0000 (2.12MB)\n\n"
-        "Burning via USB is always\n"
-        "available (GD32 UART bridge).\n\n"
-        "Author: Jia Sui\n"
-        "github.com/jsfaint/xiaomiao-loader",
-        desc->version,
-        desc->date,
-        CONFIG_IDF_TARGET, chip.revision,
-        esp_get_idf_version(),
-        chip.cores, CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ,
-        LCD_H_RES, LCD_V_RES,
-        s_sd_name, (unsigned long)s_sd_mb,
-        ROM_DIR, s_rom_count);
+             "Xiaomiao ROM Loader\n"
+             "Version: %s  Build: %s\n\n"
+             "Chip: %s rev %d\n"
+             "IDF: %s\n"
+             "Cores: %d  CPU: %dMHz\n\n"
+             "Flash: 4MB QIO 80MHz\n"
+             "PSRAM: 8MB (VSPI)\n"
+             "LCD: ST7735 %dx%d\n"
+             "SD: %s %luMB\n\n"
+             "ROMs: %s\n"
+             "ROMs found: %d\n\n"
+             "Factory: 0x10000 (568KB)\n"
+             "OTA_0:  0xA0000 (2.12MB)\n\n"
+             "Burning via USB is always\n"
+             "available (GD32 UART bridge).\n\n"
+             "Author: Jia Sui\n"
+             "github.com/jsfaint/xiaomiao-loader",
+             desc->version,
+             desc->date,
+             CONFIG_IDF_TARGET, chip.revision,
+             esp_get_idf_version(),
+             chip.cores, CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ,
+             LCD_H_RES, LCD_V_RES,
+             s_sd_name, (unsigned long)s_sd_mb,
+             ROM_DIR, s_rom_count);
     lv_obj_t *lbl = lv_label_create(area);
     lv_obj_set_width(lbl, lv_pct(100));
     lv_label_set_text(lbl, info);
@@ -1240,7 +1353,7 @@ static void ui_show_flash(const rom_entry_t *rom)
     lv_obj_set_flex_flow(scr, LV_FLEX_FLOW_COLUMN);
     lv_obj_set_style_pad_row(scr, 0, 0);
     lv_obj_set_flex_align(scr, LV_FLEX_ALIGN_START,
-                        LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_START);
+                          LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_START);
 
     lv_obj_t *title = lv_label_create(scr);
     apply_bar_style(title, UI_BROWN, UI_CREAM);
@@ -1312,7 +1425,9 @@ static void ui_show_flash(const rom_entry_t *rom)
 
 static void ui_update_flash(int pct, size_t done, size_t total)
 {
-    if (s_flash_bar) lv_bar_set_value(s_flash_bar, pct, LV_ANIM_OFF);
+    if (s_flash_bar) {
+        lv_bar_set_value(s_flash_bar, pct, LV_ANIM_OFF);
+    }
     if (s_flash_lbl) {
         char buf[48];
         snprintf(buf, sizeof(buf), "%d%%  %zu/%zu KB",
@@ -1325,10 +1440,11 @@ static void ui_flash_result(bool ok, const char *detail)
 {
     if (s_flash_lbl) {
         char buf[128];
-        if (ok)
+        if (ok) {
             snprintf(buf, sizeof(buf), "Done! Rebooting...");
-        else
+        } else {
             snprintf(buf, sizeof(buf), "FAILED: %s", detail ? detail : "?");
+        }
         lv_label_set_text(s_flash_lbl, buf);
     }
     lv_refr_now(NULL);
@@ -1375,16 +1491,22 @@ static void lvgl_task(void *arg)
     lv_group_t *group = (lv_group_t *)arg;
 
     ESP_LOGI(TAG, "ROM Loader start");
+
+    /* Light up the panel before the slow SD mount / ROM scan so the user
+     * sees the logo instead of a black screen during boot. */
+    ui_build_splash();
+    s_lcd_first_flush_done = false;
+    lv_refr_now(NULL);
+    for (uint8_t i = 0; i < 100 && !s_lcd_first_flush_done; ++i) {
+        vTaskDelay(pdMS_TO_TICKS(1));
+    }
+    lcd_display_on();
+
     sd_try_mount();
     s_rom_count = rom_scan();
     ota0_load_state();
 
     ui_build_main(group);
-    s_lcd_first_flush_done = false;
-    lv_refr_now(NULL);
-    for (uint8_t i = 0; i < 100 && !s_lcd_first_flush_done; ++i)
-        vTaskDelay(pdMS_TO_TICKS(1));
-    lcd_display_on();
 
     while (true) {
         if (s_flash_rom_idx >= 0) {
@@ -1402,8 +1524,9 @@ static void lvgl_task(void *arg)
                         esp_partition_find_first(
                             ESP_PARTITION_TYPE_APP,
                             ESP_PARTITION_SUBTYPE_APP_OTA_0, NULL);
-                    if (part)
+                    if (part) {
                         esp_ota_set_boot_partition(part);
+                    }
                     vTaskDelay(pdMS_TO_TICKS(800));
                     sd_deinit();
                     esp_restart();
@@ -1412,8 +1535,8 @@ static void lvgl_task(void *arg)
                     ui_show_flash(rom);
                     s_flashing = true;
                     esp_err_t err = (rom->type == ROM_DUAL_IMG)
-                                     ? rom_flash_dual(rom)
-                                     : rom_flash_ota(rom);
+                                    ? rom_flash_dual(rom)
+                                    : rom_flash_ota(rom);
                     s_flashing = false;
                     if (err == ESP_OK) {
                         ota0_save_state(rom);
@@ -1424,8 +1547,9 @@ static void lvgl_task(void *arg)
                     } else {
                         ui_flash_result(false, esp_err_to_name(err));
                         vTaskDelay(pdMS_TO_TICKS(3000));
-                        if (s_main_screen)
+                        if (s_main_screen) {
                             lv_screen_load(s_main_screen);
+                        }
                     }
                 }
             }
