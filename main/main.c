@@ -667,8 +667,8 @@ static bool img_parse_at(FILE *f, rom_entry_t *r, long pt_off)
     /* diagnostic: show what we read at this offset */
     uint8_t probe[4];
     size_t got = fread(probe, 1, sizeof(probe), f);
-    ESP_LOGI(TAG, "img_parse @0x%lx: read %zu bytes: %02x %02x %02x %02x",
-             pt_off, got, probe[0], probe[1], probe[2], probe[3]);
+    ESP_LOGI(TAG, "img_parse @0x%lx: read %lu bytes: %02x %02x %02x %02x",
+             pt_off, (unsigned long)got, probe[0], probe[1], probe[2], probe[3]);
     fseek(f, pt_off, SEEK_SET);
 
     bool found_launcher = false, found_core = false;
@@ -709,9 +709,9 @@ static bool img_parse_at(FILE *f, rom_entry_t *r, long pt_off)
     r->img_core_off      = core_off;
     r->img_launcher_size = rom_calc_app_size(f, launcher_off);
     r->img_core_size     = rom_calc_app_size(f, core_off);
-    ESP_LOGI(TAG, "img_parse: launcher=%d size=%zu core=%d size=%zu",
-             found_launcher, r->img_launcher_size,
-             found_core, r->img_core_size);
+    ESP_LOGI(TAG, "img_parse: launcher=%d size=%lu core=%d size=%lu",
+             found_launcher, (unsigned long)r->img_launcher_size,
+             found_core, (unsigned long)r->img_core_size);
     return r->img_launcher_size > 0 && r->img_core_size > 0;
 }
 
@@ -781,8 +781,9 @@ static int rom_scan(void)
             fclose(f);
         }
 
-        ESP_LOGI(TAG, "ROM: %-20s  file=%zu  app_off=0x%zx  app=%zu  valid=%d",
-                 r->name, r->file_size, r->app_offset, r->app_size, r->valid);
+        ESP_LOGI(TAG, "ROM: %-20s  file=%lu  app_off=0x%lx  app=%lu  valid=%d",
+                 r->name, (unsigned long)r->file_size,
+                 (unsigned long)r->app_offset, (unsigned long)r->app_size, r->valid);
         count++;
     }
     closedir(dir);
@@ -886,13 +887,13 @@ static esp_err_t write_range_to_partition(FILE *f, size_t off, size_t size,
                                           const char *label)
 {
     if (size > part->size) {
-        ESP_LOGE(TAG, "%s: %zu bytes > partition %lu bytes",
-                 label, size, (unsigned long)part->size);
+        ESP_LOGE(TAG, "%s: %lu bytes > partition %lu bytes",
+                 label, (unsigned long)size, (unsigned long)part->size);
         return ESP_ERR_NO_MEM;
     }
 
-    ESP_LOGI(TAG, "Writing %s: off=0x%zx size=%zu → @0x%08lx",
-             label, off, size, (unsigned long)part->address);
+    ESP_LOGI(TAG, "Writing %s: off=0x%lx size=%lu → @0x%08lx",
+             label, (unsigned long)off, (unsigned long)size, (unsigned long)part->address);
 
     esp_ota_handle_t handle = 0;
     esp_err_t err = esp_ota_begin(part, size, &handle);
@@ -917,7 +918,7 @@ static esp_err_t write_range_to_partition(FILE *f, size_t off, size_t size,
         size_t want = MIN(OTA_CHUNK_SZ, size - total);
         size_t got = fread(buf, 1, want, f);
         if (got == 0) {
-            ESP_LOGE(TAG, "fread returned 0 at offset %zu", total);
+            ESP_LOGE(TAG, "fread returned 0 at offset %lu", (unsigned long)total);
             free(buf);
             esp_ota_abort(handle);
             return ESP_FAIL;
@@ -1430,8 +1431,8 @@ static void ui_update_flash(int pct, size_t done, size_t total)
     }
     if (s_flash_lbl) {
         char buf[48];
-        snprintf(buf, sizeof(buf), "%d%%  %zu/%zu KB",
-                 pct, done / 1024, total / 1024);
+        snprintf(buf, sizeof(buf), "%d%%  %lu/%lu KB",
+                 pct, (unsigned long)(done / 1024), (unsigned long)(total / 1024));
         lv_label_set_text(s_flash_lbl, buf);
     }
 }
