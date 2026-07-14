@@ -1574,6 +1574,24 @@ void app_main(void)
 
     buttons_init();
 
+    /* 快速启动：ota_0 有有效 ROM 且 B 键未按 → 直接重启进 ROM，
+     * 跳过 LCD/LVGL 初始化以减少启动延迟。
+     * 必须检查 ESP_OTA_IMG_VALID —— ROM 崩溃后 ota_0 处于 pending
+     * verify 状态，此时自动重启会陷入反回滚死循环。 */
+    ota0_load_state();
+    if (s_ota0_state.valid &&
+        gpio_get_level(GPIO_NUM_12) != BUTTON_ACTIVE_LEVEL) {
+        const esp_partition_t *ota0 = esp_partition_find_first(
+            ESP_PARTITION_TYPE_APP, ESP_PARTITION_SUBTYPE_APP_OTA_0, NULL);
+        esp_ota_img_states_t img_state = ESP_OTA_IMG_INVALID;
+        if (ota0 &&
+            esp_ota_get_state_partition(ota0, &img_state) == ESP_OK &&
+            img_state == ESP_OTA_IMG_VALID) {
+            esp_ota_set_boot_partition(ota0);
+            esp_restart();
+        }
+    }
+
     esp_lcd_panel_io_handle_t io = lcd_init();
 
     lv_init();
