@@ -39,9 +39,10 @@
 | partition_table | 0x9000 | 4KB | 分区表 |
 | nvs | 0xA000 | 20KB | Loader 存储 ROM 状态 |
 | phy_init | 0xF000 | 4KB | PHY 校准 |
-| **factory** | **0x10000** | **696KB** | **Loader 固件（永不覆写）** |
-| otadata | 0xBE000 | 8KB | 启动分区选择 |
-| **ota_0** | **0xC0000** | **3.25MB** | **ROM 运行槽** |
+| **factory** | **0x10000** | **568KB** | **Loader 固件（永不覆写）** |
+| otadata | 0x9E000 | 8KB | 启动分区选择 |
+| **ota_0** | **0xA0000** | **2.12MB** | **ROM 运行槽 / retro-go launcher** |
+| **ota_1** | **0x2C0000** | **1.25MB** | **retro-go 模拟器核心** |
 
 ## 构建
 
@@ -78,7 +79,7 @@ Loader 自动识别两种格式：
 - **App-only bin**（app 在 0x0）：直接写入
 - **Full-flash 镜像**（分区表 @0x8000 + bootloader @0x1000）：retro-go `.img`/`.bin`，自动解析内嵌分区表，launcher → ota_0，retro-core → ota_1
 
-ROM 大小上限：3.25MB（ota_0）。
+ROM 大小上限：2.12MB（ota_0）。
 
 ### retro-go 双 app 加载
 

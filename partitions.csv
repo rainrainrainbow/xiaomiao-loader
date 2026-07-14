@@ -11,7 +11,7 @@
 # Name,       Type, SubType, Offset,   Size,     Flags
 nvs,          data, nvs,     0xA000,   0x5000,
 phy_init,     data, phy,     0xF000,   0x1000,
-factory,      app,  factory, 0x10000,  0xAE000,
-otadata,      data, ota,     0xBE000,  0x2000,
-launcher,     app,  ota_0,   0xC0000,  0x200000,
+factory,      app,  factory, 0x10000,  0x8E000,
+otadata,      data, ota,     0x9E000,  0x2000,
+launcher,     app,  ota_0,   0xA0000,  0x220000,
 retro-core,   app,  ota_1,   0x2C0000, 0x140000,
