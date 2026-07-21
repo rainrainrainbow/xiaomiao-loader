@@ -1,6 +1,6 @@
 name: Build Xiaomiao Loader
 
-nn:
+on:
   push:
     branches: [ feature/wifi-file-manager, main ]
   workflow_dispatch:
