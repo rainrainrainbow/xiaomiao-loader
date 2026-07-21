@@ -1,0 +1,34 @@
+name: Build Xiaomiao Loader
+
+nn:
+  push:
+    branches: [ feature/wifi-file-manager, main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: espressif/idf:release-v5.5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build firmware
+        shell: bash
+        run: |
+          . /opt/esp/idf/export.sh
+          idf.py build
+          idf.py merge-bin -o xiaomiao-loader-merged.bin
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: xiaomiao-loader-bin
+          path: |
+            build/xiaomiao-loader.bin
+            xiaomiao-loader-merged.bin
+            build/bootloader/bootloader.bin
+            build/partition_table/partition-table.bin
