@@ -10,6 +10,10 @@
 
 #include "local_file_manager.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-truncation"
+#pragma GCC diagnostic ignored "-Wstringop-truncation"
+
 __attribute__((unused)) static const char *TAG = "local_fm";
 
 #define UI_YELLOW   0xF6D34A
@@ -23,16 +27,16 @@ static lv_obj_t *s_fm_screen = NULL;
 static lv_obj_t *s_file_list = NULL;
 static lv_obj_t *s_path_label = NULL;
 static lv_group_t *s_fm_group = NULL;
-static char s_current_dir[2048] = "/sdcard";
+static char s_current_dir[1024] = "/sdcard";
 
-static void normalize_path(char *buf, size_t bufsz) {
+static void normalize_path(char *buf) {
     size_t len = strlen(buf);
     while (len > 1 && buf[len - 1] == '/') buf[--len] = '\0';
 }
 
 static void join_path(char *buf, size_t bufsz, const char *a, const char *b) {
     snprintf(buf, bufsz, "%s/%s", a, b);
-    normalize_path(buf, bufsz);
+    normalize_path(buf);
 }
 
 static void format_size_lfm(char *buf, size_t bufsz, size_t bytes) {
@@ -54,7 +58,7 @@ static void apply_bar_style_lfm(lv_obj_t *label, uint32_t bg, uint32_t fg) {
 
 static void enter_dir(const char *path) {
     snprintf(s_current_dir, sizeof(s_current_dir), "%s", path);
-    normalize_path(s_current_dir, sizeof(s_current_dir));
+    normalize_path(s_current_dir);
 }
 
 static void go_up(void) {
@@ -65,7 +69,7 @@ static void go_up(void) {
 static void on_file_clicked(lv_event_t *e) {
     const char *name = (const char *)lv_event_get_user_data(e);
     if (!name) return;
-    char full_path[2048];
+    char full_path[1024];
     join_path(full_path, sizeof(full_path), s_current_dir, name);
     struct stat st;
     if (stat(full_path, &st) == 0 && S_ISDIR(st.st_mode)) {
@@ -85,7 +89,7 @@ __attribute__((unused)) static void on_file_key(lv_event_t *e) {
         if (focused) {
             const char *name = (const char *)lv_obj_get_user_data(focused);
             if (name) {
-                char full_path[2048];
+                char full_path[1024];
                 join_path(full_path, sizeof(full_path), s_current_dir, name);
                 struct stat st;
                 if (stat(full_path, &st) == 0 && S_ISDIR(st.st_mode)) {
@@ -168,7 +172,7 @@ void local_fm_show(lv_group_t *group) {
     struct dirent *ent;
     while ((ent = readdir(dir)) != NULL) {
         if (ent->d_name[0] == '.') continue;
-        char full_path[2048];
+        char full_path[1024];
         join_path(full_path, sizeof(full_path), s_current_dir, ent->d_name);
         struct stat st;
         bool is_dir = false;
@@ -203,3 +207,5 @@ void local_fm_show(lv_group_t *group) {
     closedir(dir);
     lv_group_focus_obj(lv_obj_get_child(s_file_list, 0));
 }
+
+#pragma GCC diagnostic pop
