@@ -1,1 +1,19 @@
-LyoKICogVG9vbHMgU2NyZWVuIGZvciBYaWFvbWlhbyBMb2FkZXIKICoKICogUHJvdmlkZXMgYWNjZXNzIHRvOgogKiAtIFdpRmkgRmlsZSBNYW5hZ2VyIChzdGFydC9zdG9wKQogKiAtIExvY2FsIEZpbGUgTWFuYWdlciAob24tZGV2aWNlIGZpbGUgYnJvd3NlcikKICogLSBCYWNrIHRvIFJPTSBMb2FkZXIKICovCgojaWZuZGVmIFRPT0xTX1NDUkVFTl9ICiNkZWZpbmUgVE9PTFNfU0NSRUVOX0gKCiNpbmNsdWRlICJsdmdsLmgiCgp2b2lkIHRvb2xzX3NjcmVlbl9zaG93KGx2X2dyb3VwX3QgKmdyb3VwKTsKdm9pZCB0b29sc19zY3JlZW5fdXBkYXRlX3dpZmlfc3RhdHVzKHZvaWQpOwp2b2lkIHRvb2xzX3NjcmVlbl9zZXRfcmV0dXJuX2NiKHZvaWQgKCpjYikoaHZfZ3JvdXBfdCAqZ3JvdXApKTsKCiNlbmRpZiAvKiBUT09MU19TQ1JFRU5fSCAqLwo=
+/*
+ * Tools Screen for Xiaomiao Loader
+ *
+ * Provides access to:
+ * - WiFi File Manager (start/stop)
+ * - Local File Manager (on-device file browser)
+ * - Back to ROM Loader
+ */
+
+#ifndef TOOLS_SCREEN_H
+#define TOOLS_SCREEN_H
+
+#include "lvgl.h"
+
+void tools_screen_show(lv_group_t *group);
+void tools_screen_update_wifi_status(void);
+void tools_screen_set_return_cb(void (*cb)(lv_group_t *group));
+
+#endif /* TOOLS_SCREEN_H */
