@@ -10,7 +10,7 @@
 
 #include "local_file_manager.h"
 
-static const char *TAG = "local_fm";
+__attribute__((unused)) static const char *TAG = "local_fm";
 
 #define UI_YELLOW   0xF6D34A
 #define UI_BLACK    0x1B1713
@@ -74,7 +74,7 @@ static void on_file_clicked(lv_event_t *e) {
     }
 }
 
-static void on_file_key(lv_event_t *e) {
+__attribute__((unused)) static void on_file_key(lv_event_t *e) {
     uint32_t key = lv_event_get_key(e);
     lv_group_t *grp = (lv_group_t *)lv_event_get_user_data(e);
     if (key == LV_KEY_ESC) { go_up(); local_fm_show(grp); }
