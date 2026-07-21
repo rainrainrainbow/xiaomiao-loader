@@ -1,1 +1,144 @@
-I2luY2x1ZGUgPHN0ZGlvLmg+CiNpbmNsdWRlIDxzdHJpbmcuaD4KI2luY2x1ZGUgImVzcF9sb2cuaCIKI2luY2x1ZGUgInRvb2xzX3NjcmVlbi5oIgojaW5jbHVkZSAid2lmaV9maWxlX21hbmFnZXIuaCIKI2luY2x1ZGUgImxvY2FsX2ZpbGVfbWFuYWdlci5oIgoKX19hdHRyaWJ1dGVfXygodW51c2VkKSkgc3RhdGljIGNvbnN0IGNoYXIgKlRBRyA9ICJ0b29sc19zY3JlZW4iOwoKI2RlZmluZSBVSV9ZRUxMT1cgICAweEY2RDM0QQojZGVmaW5lIFVJX0JMQUNLICAgIDB4MUIxNzEzCiNkZWZpbmUgVUlfQlJPV04gICAgMHg1QzQyMjAKI2RlZmluZSBVSV9SRUQgICAgICAweEU2NEIzQwojZGVmaW5lIFVJX0NSRUFNICAgIDB4RkZGM0IwCiNkZWZpbmUgVUlfR1JFRU4gICAgMHgyREQ0NjYKCnN0YXRpYyBsdl9vYmpfdCAqc190b29sc19zY3JlZW4gPSBOVUxMOwpzdGF0aWMgbHZfb2JqX3QgKnNfd2lmaV9idG4gPSBOVUxMOwpzdGF0aWMgbHZfb2JqX3QgKnNfd2lmaV9zdGF0dXMgPSBOVUxMOwpzdGF0aWMgbHZfb2JqX3QgKnNfbG9jYWxfZm1fYnRuID0gTlVMTDsKc3RhdGljIGx2X29ial90ICpzX2JhY2tfYnRuID0gTlVMTDsKc3RhdGljIHZvaWQgKCpzX3JldHVybl90b19tYWluX2NiKShsdl9ncm91cF90ICpncm91cCkgPSBOVUxMOwoKc3RhdGljIHZvaWQgYXBwbHlfYmFyX3N0eWxlX3RzKGx2X29ial90ICpsYWJlbCwgdWludDMyX3QgYmcsIHVpbnQzMl90IGZnKSB7CiAgICBsdl9vYmpfc2V0X3N0eWxlX2JnX2NvbG9yKGxhYmVsLCBsdl9jb2xvcl9oZXgoYmcpLCAwKTsKICAgIGx2X29ial9zZXRfc3R5bGVfYmdfb3BhKGxhYmVsLCBMVl9PUEFfQ09WRVIsIDApOwogICAgbHZfb2JqX3NldF9zdHlsZV90ZXh0X2NvbG9yKGxhYmVsLCBsdl9jb2xvcl9oZXgoZmcpLCAwKTsKICAgIGx2X29ial9zZXRfc3R5bGVfcGFkX3ZlcihsYWJlbCwgMiwgMCk7CiAgICBsdl9vYmpfc2V0X3N0eWxlX3BhZF9ob3IobGFiZWwsIDQsIDApOwp9Cgp2b2lkIHRvb2xzX3NjcmVlbl91cGRhdGVfd2lmaV9zdGF0dXModm9pZCkgewogICAgaWYgKCFzX3dpZmlfc3RhdHVzKSByZXR1cm47CiAgICBpZiAod2lmaV9maWxlX21hbmFnZXJfaXNfcnVubmluZygpKSB7CiAgICAgICAgY29uc3QgY2hhciAqaXAgPSB3aWZpX2ZpbGVfbWFuYWdlcl9nZXRfaXAoKTsKICAgICAgICBjaGFyIGJ1Zls2NF07CiAgICAgICAgc25wcmludGYoYnVmLCBzaXplb2YoYnVmKSwgIldpRmk6IE9OICBJUDogJXMiLCBpcCk7CiAgICAgICAgbHZfbGFiZWxfc2V0X3RleHQoc193aWZpX3N0YXR1cywgYnVmKTsKICAgICAgICBpZiAoc193aWZpX2J0bikgbHZfbGFiZWxfc2V0X3RleHQobHZfb2JqX2dldF9jaGlsZChzX3dpZmlfYnRuLCAwKSwgIlx4ZTJceDhmXHhiOSBTdG9wIFdpRmkiKTsKICAgIH0gZWxzZSB7CiAgICAgICAgbHZfbGFiZWxfc2V0X3RleHQoc193aWZpX3N0YXR1cywgIldpRmk6IE9GRiIpOwogICAgICAgIGlmIChzX3dpZmlfYnRuKSBsdl9sYWJlbF9zZXRfdGV4dChsdl9vYmpfZ2V0X2NoaWxkKHNfd2lmaV9idG4sIDApLCAiXHhmMFx4OWZceDkzXHhhMSBTdGFydCBXaUZpIik7CiAgICB9Cn0KCnZvaWQgdG9vbHNfc2NyZWVuX3Nob3cobHZfZ3JvdXBfdCAqZ3JvdXApIHsKICAgIGlmIChzX3Rvb2xzX3NjcmVlbikgewogICAgICAgIGx2X3NjcmVlbl9sb2FkKHNfdG9vbHNfc2NyZWVuKTsKICAgICAgICBpZiAoc193aWZpX2J0bikgbHZfZ3JvdXBfZm9jdXNfb2JqKHNfd2lmaV9idG4pOwogICAgICAgIHRvb2xzX3NjcmVlbl91cGRhdGVfd2lmaV9zdGF0dXMoKTsKICAgICAgICByZXR1cm47CiAgICB9CiAgICBsdl9vYmpfdCAqc2NyID0gbHZfb2JqX2NyZWF0ZShOVUxMKTsKICAgIHNfdG9vbHNfc2NyZWVuID0gc2NyOwogICAgbHZfb2JqX3NldF9zdHlsZV9iZ19jb2xvcihzY3IsIGx2X2NvbG9yX2hleChVSV9ZRUxMT1cpLCAwKTsKICAgIGx2X29ial9zZXRfc3R5bGVfYmdfb3BhKHNjciwgTFZfT1BBX0NPVkVSLCAwKTsKICAgIGx2X29ial9zZXRfc3R5bGVfcGFkX2FsbChzY3IsIDAsIDApOwogICAgbHZfb2JqX3NldF9mbGV4X2Zsb3coc2NyLCBMVl9GTEVYX0ZMT1dfQ09MVU1OKTsKICAgIGx2X29ial9zZXRfc3R5bGVfcGFkX3JvdyhzY3IsIDAsIDApOwogICAgbHZfb2JqX3QgKnRpdGxlID0gbHZfbGFiZWxfY3JlYXRlKHNjcik7CiAgICBhcHBseV9iYXJfc3R5bGVfdHModGl0bGUsIFVJX0JST1dOLCBVSV9DUkVBTSk7CiAgICBsdl9vYmpfc2V0X3dpZHRoKHRpdGxlLCBsdl9wY3QoMTAwKSk7CiAgICBsdl9sYWJlbF9zZXRfdGV4dCh0aXRsZSwgIlRPT0xTIik7CiAgICBsdl9vYmpfc2V0X3N0eWxlX3RleHRfYWxpZ24odGl0bGUsIExWX1RFWFRfQUxJR05fQ0VOVEVSLCAwKTsKICAgIHNfd2lmaV9zdGF0dXMgPSBsdl9sYWJlbF9jcmVhdGUoc2NyKTsKICAgIGFwcGx5X2Jhcl9zdHlsZV90cyhzX3dpZmlfc3RhdHVzLCBVSV9ZRUxMT1csIFVJX0JST1dOKTsKICAgIGx2X29ial9zZXRfd2lkdGgoc193aWZpX3N0YXR1cywgbHZfcGN0KDEwMCkpOwogICAgbHZfb2JqX3NldF9zdHlsZV90ZXh0X2ZvbnQoc193aWZpX3N0YXR1cywgJmx2X2ZvbnRfbW9udHNlcnJhdF8xMCwgMCk7CiAgICBsdl9sYWJlbF9zZXRfdGV4dChzX3dpZmlfc3RhdHVzLCAiV2lGaTogT0ZGIik7CiAgICBsdl9vYmpfdCAqbWVudSA9IGx2X29ial9jcmVhdGUoc2NyKTsKICAgIGx2X29ial9zZXRfd2lkdGgobWVudSwgbHZfcGN0KDEwMCkpOwogICAgbHZfb2JqX3NldF9mbGV4X2dyb3cobWVudSwgMSk7CiAgICBsdl9vYmpfc2V0X2ZsZXhfZmxvdyhtZW51LCBMVl9GTEVYX0ZMT1dfQ09MVU1OKTsKICAgIGx2X29ial9zZXRfc3R5bGVfYmdfY29sb3IobWVudSwgbHZfY29sb3JfaGV4KFVJX1lFTExPVyksIDApOwogICAgbHZfb2JqX3NldF9zdHlsZV9iZ19vcGEobWVudSwgTFZfT1BBX0NPVkVSLCAwKTsKICAgIGx2X29ial9zZXRfc3R5bGVfYm9yZGVyX3dpZHRoKG1lbnUsIDAsIDApOwogICAgbHZfb2JqX3NldF9zdHlsZV9wYWRfYWxsKG1lbnUsIDQsIDApOwogICAgbHZfb2JqX3NldF9zdHlsZV9wYWRfcm93KG1lbnUsIDQsIDApOwogICAgbHZfb2JqX3NldF9zY3JvbGxiYXJfbW9kZShtZW51LCBMVl9TQ1JPTExCQVJfTU9ERV9BVVRPKTsKICAgIHNfd2lmaV9idG4gPSBsdl9idXR0b25fY3JlYXRlKG1lbnUpOwogICAgbHZfb2JqX3NldF93aWR0aChzX3dpZmlfYnRuLCBsdl9wY3QoMTAwKSk7CiAgICBsdl9vYmpfc2V0X3N0eWxlX2JnX2NvbG9yKHNfd2lmaV9idG4sIGx2X2NvbG9yX2hleChVSV9DUkVBTSksIDApOwogICAgbHZfb2JqX3NldF9zdHlsZV9iZ19vcGEoc193aWZpX2J0biwgTFZfT1BBX0NPVkVSLCAwKTsKICAgIGx2X29ial9zZXRfc3R5bGVfYm9yZGVyX3dpZHRoKHNfd2lmaV9idG4sIDAsIDApOwogICAgbHZfb2JqX3NldF9zdHlsZV9wYWRfdmVyKHNfd2lmaV9idG4sIDgsIDApOwogICAgbHZfb2JqX3NldF9zdHlsZV9wYWRfaG9yKHNfd2lmaV9idG4sIDgsIDApOwogICAgbHZfb2JqX3NldF9zdHlsZV9zaGFkb3dfd2lkdGgoc193aWZpX2J0biwgMCwgMCk7CiAgICBsdl9vYmpfc2V0X3N0eWxlX2JnX2NvbG9yKHNfd2lmaV9idG4sIGx2X2NvbG9yX2hleChVSV9CUk9XTiksIExWX1NUQVRFX0ZPQ1VTRUQpOwogICAgbHZfb2JqX3NldF9zdHlsZV90ZXh0X2NvbG9yKHNfd2lmaV9idG4sIGx2X2NvbG9yX2hleChVSV9CUk9XTiksIDApOwogICAgbHZfb2JqX3NldF9zdHlsZV90ZXh0X2NvbG9yKHNfd2lmaV9idG4sIGx2X2NvbG9yX2hleChVSV9DUkVBTSksIExWX1NUQVRFX0ZPQ1VTRUQpOwogICAgbHZfb2JqX3QgKndpZmlfbGJsID0gbHZfbGFiZWxfY3JlYXRlKHNfd2lmaV9idG4pOwogICAgbHZfbGFiZWxfc2V0X3RleHQod2lmaV9sYmwsICJceGYwXHg5Zlx4OTNceGExIFN0YXJ0IFdpRmkiKTsKICAgIGx2X29ial9zZXRfc3R5bGVfdGV4dF9mb250KHdpZmlfbGJsLCAmbHZfZm9udF9tb250c2VycmF0XzE0LCAwKTsKICAgIGx2X29ial9jZW50ZXIod2lmaV9sYmwpOwogICAgbHZfZ3JvdXBfYWRkX29iaihncm91cCwgc193aWZpX2J0bik7CiAgICBzX2xvY2FsX2ZtX2J0biA9IGx2X2J1dHRvbl9jcmVhdGUobWVudSk7CiAgICBsdl9vYmpfc2V0X3dpZHRoKHNfbG9jYWxfZm1fYnRuLCBsdl9wY3QoMTAwKSk7CiAgICBsdl9vYmpfc2V0X3N0eWxlX2JnX2NvbG9yKHNfbG9jYWxfZm1fYnRuLCBsdl9jb2xvcl9oZXgoVUlfQ1JFQU0pLCAwKTsKICAgIGx2X29ial9zZXRfc3R5bGVfYmdfb3BhKHNfbG9jYWxfZm1fYnRuLCBMVl9PUEFfQ09WRVIsIDApOwogICAgbHZfb2JqX3NldF9zdHlsZV9ib3JkZXJfd2lkdGgoc19sb2NhbF9mbV9idG4sIDAsIDApOwogICAgbHZfb2JqX3NldF9zdHlsZV9wYWRfdmVyKHNfbG9jYWxfZm1fYnRuLCA4LCAwKTsKICAgIGx2X29ial9zZXRfc3R5bGVfcGFkX2hvcihzX2xvY2FsX2ZtX2J0biwgOCwgMCk7CiAgICBsdl9vYmpfc2V0X3N0eWxlX3NoYWRvd193aWR0aChzX2xvY2FsX2ZtX2J0biwgMCwgMCk7CiAgICBsdl9vYmpfc2V0X3N0eWxlX2JnX2NvbG9yKHNfbG9jYWxfZm1fYnRuLCBsdl9jb2xvcl9oZXgoVUlfQlJPV04pLCBMVl9TVEFURV9GT0NVU0VEKTsKICAgIGx2X29ial9zZXRfc3R5bGVfdGV4dF9jb2xvcihzX2xvY2FsX2ZtX2J0biwgbHZfY29sb3JfaGV4KFVJX0JST1dOKSwgMCk7CiAgICBsdl9vYmpfc2V0X3N0eWxlX3RleHRfY29sb3Ioc19sb2NhbF9mbV9idG4sIGx2X2NvbG9yX2hleChVSV9DUkVBTSksIExWX1NUQVRFX0ZPQ1VTRUQpOwogICAgbHZfb2JqX3QgKmZtX2xibCA9IGx2X2xhYmVsX2NyZWF0ZShzX2xvY2FsX2ZtX2J0bik7CiAgICBsdl9sYWJlbF9zZXRfdGV4dChmbV9sYmwsICJceGYwXHg5Zlx4OTNceDgxIExvY2FsIEZpbGUgTWFuYWdlciIpOwogICAgbHZfb2JqX3NldF9zdHlsZV90ZXh0X2ZvbnQoZm1fbGJsLCAmbHZfZm9udF9tb250c2VycmF0XzE0LCAwKTsKICAgIGx2X29ial9jZW50ZXIoZm1fbGJsKTsKICAgIGx2X2dyb3VwX2FkZF9vYmooZ3JvdXAsIHNfbG9jYWxfZm1fYnRuKTsKICAgIGx2X29ial90ICpzcGFjZXIgPSBsdl9vYmpfY3JlYXRlKG1lbnUpOwogICAgbHZfb2JqX3NldF9mbGV4X2dyb3coc3BhY2VyLCAxKTsKICAgIGx2X29ial9zZXRfc3R5bGVfYmdfb3BhKHNwYWNlciwgTFZfT1BBX1RSQU5TUCwgMCk7CiAgICBsdl9vYmpfc2V0X3N0eWxlX2JvcmRlcl93aWR0aChzcGFjZXIsIDAsIDApOwogICAgc19iYWNrX2J0biA9IGx2X2J1dHRvbl9jcmVhdGUobWVudSk7CiAgICBsdl9vYmpfc2V0X3dpZHRoKHNfYmFja19idG4sIGx2X3BjdCgxMDApKTsKICAgIGx2X29ial9zZXRfc3R5bGVfYmdfY29sb3Ioc19iYWNrX2J0biwgbHZfY29sb3JfaGV4KFVJX0NSRUFNKSwgMCk7CiAgICBsdl9vYmpfc2V0X3N0eWxlX2JnX29wYShzX2JhY2tfYnRuLCBMVl9PUEFfQ09WRVIsIDApOwogICAgbHZfb2JqX3NldF9zdHlsZV9ib3JkZXJfd2lkdGgoc19iYWNrX2J0biwgMCwgMCk7CiAgICBsdl9vYmpfc2V0X3N0eWxlX3BhZF92ZXIoc19iYWNrX2J0biwgOCwgMCk7CiAgICBsdl9vYmpfc2V0X3N0eWxlX3BhZF9ob3Ioc19iYWNrX2J0biwgOCwgMCk7CiAgICBsdl9vYmpfc2V0X3N0eWxlX3NoYWRvd193aWR0aChzX2JhY2tfYnRuLCAwLCAwKTsKICAgIGx2X29ial9zZXRfc3R5bGVfYmdfY29sb3Ioc19iYWNrX2J0biwgbHZfY29sb3JfaGV4KFVJX0JST1dOKSwgTFZfU1RBVEVfRk9DVVNFRCk7CiAgICBsdl9vYmpfc2V0X3N0eWxlX3RleHRfY29sb3Ioc19iYWNrX2J0biwgbHZfY29sb3JfaGV4KFVJX0JST1dOKSwgMCk7CiAgICBsdl9vYmpfc2V0X3N0eWxlX3RleHRfY29sb3Ioc19iYWNrX2J0biwgbHZfY29sb3JfaGV4KFVJX0NSRUFNKSwgTFZfU1RBVEVfRk9DVVNFRCk7CiAgICBsdl9vYmpfdCAqYmFja19sYmwgPSBsdl9sYWJlbF9jcmVhdGUoc19iYWNrX2J0bik7CiAgICBsdl9sYWJlbF9zZXRfdGV4dChiYWNrX2xibCwgIlx4ZTJceGFjXHg4NVx4ZWZceGI4XHg4ZiBCYWNrIHRvIFJPTSBMb2FkZXIiKTsKICAgIGx2X29ial9zZXRfc3R5bGVfdGV4dF9mb250KGJhY2tfbGJsLCAmbHZfZm9udF9tb250c2VycmF0XzE0LCAwKTsKICAgIGx2X29ial9jZW50ZXIoYmFja19sYmwpOwogICAgbHZfZ3JvdXBfYWRkX29iaihncm91cCwgc19iYWNrX2J0bik7CiAgICBsdl9vYmpfdCAqaGludCA9IGx2X2xhYmVsX2NyZWF0ZShzY3IpOwogICAgYXBwbHlfYmFyX3N0eWxlX3RzKGhpbnQsIFVJX0JST1dOLCBVSV9DUkVBTSk7CiAgICBsdl9vYmpfc2V0X3dpZHRoKGhpbnQsIGx2X3BjdCgxMDApKTsKICAgIGx2X2xhYmVsX3NldF90ZXh0KGhpbnQsICJBOlNlbGVjdCAgQjpCYWNrIik7CiAgICBsdl9vYmpfc2V0X3N0eWxlX3RleHRfYWxpZ24oaGludCwgTFZfVEVYVF9BTElHTl9DRU5URVIsIDApOwogICAgbHZfc2NyZWVuX2xvYWQoc2NyKTsKICAgIGlmIChzX3dpZmlfYnRuKSBsdl9ncm91cF9mb2N1c19vYmooc193aWZpX2J0bik7CiAgICB0b29sc19zY3JlZW5fdXBkYXRlX3dpZmlfc3RhdHVzKCk7Cn0KCnZvaWQgdG9vbHNfc2NyZWVuX3NldF9yZXR1cm5fY2Iodm9pZCAoKmNiKShsdl9ncm91cF90ICpncm91cCkpIHsKICAgIHNfcmV0dXJuX3RvX21haW5fY2IgPSBjYjsKfQo=
+#include <stdio.h>
+#include <string.h>
+#include "esp_log.h"
+#include "tools_screen.h"
+#include "wifi_file_manager.h"
+#include "local_file_manager.h"
+
+__attribute__((unused)) static const char *TAG = "tools_screen";
+
+#define UI_YELLOW   0xF6D34A
+#define UI_BLACK    0x1B1713
+#define UI_BROWN    0x5C4220
+#define UI_RED      0xE64B3C
+#define UI_CREAM    0xFFF3B0
+#define UI_GREEN    0x2DD466
+
+static lv_obj_t *s_tools_screen = NULL;
+static lv_obj_t *s_wifi_btn = NULL;
+static lv_obj_t *s_wifi_status = NULL;
+static lv_obj_t *s_local_fm_btn = NULL;
+static lv_obj_t *s_back_btn = NULL;
+static void (*s_return_to_main_cb)(lv_group_t *group) = NULL;
+
+static void apply_bar_style_ts(lv_obj_t *label, uint32_t bg, uint32_t fg) {
+    lv_obj_set_style_bg_color(label, lv_color_hex(bg), 0);
+    lv_obj_set_style_bg_opa(label, LV_OPA_COVER, 0);
+    lv_obj_set_style_text_color(label, lv_color_hex(fg), 0);
+    lv_obj_set_style_pad_ver(label, 2, 0);
+    lv_obj_set_style_pad_hor(label, 4, 0);
+}
+
+void tools_screen_update_wifi_status(void) {
+    if (!s_wifi_status) return;
+    if (wifi_file_manager_is_running()) {
+        const char *ip = wifi_file_manager_get_ip();
+        char buf[64];
+        snprintf(buf, sizeof(buf), "WiFi: ON  IP: %s", ip);
+        lv_label_set_text(s_wifi_status, buf);
+        if (s_wifi_btn) lv_label_set_text(lv_obj_get_child(s_wifi_btn, 0), "\xe2\x8f\xb9 Stop WiFi");
+    } else {
+        lv_label_set_text(s_wifi_status, "WiFi: OFF");
+        if (s_wifi_btn) lv_label_set_text(lv_obj_get_child(s_wifi_btn, 0), "\xf0\x9f\x93\xa1 Start WiFi");
+    }
+}
+
+void tools_screen_show(lv_group_t *group) {
+    if (s_tools_screen) {
+        lv_screen_load(s_tools_screen);
+        if (s_wifi_btn) lv_group_focus_obj(s_wifi_btn);
+        tools_screen_update_wifi_status();
+        return;
+    }
+    lv_obj_t *scr = lv_obj_create(NULL);
+    s_tools_screen = scr;
+    lv_obj_set_style_bg_color(scr, lv_color_hex(UI_YELLOW), 0);
+    lv_obj_set_style_bg_opa(scr, LV_OPA_COVER, 0);
+    lv_obj_set_style_pad_all(scr, 0, 0);
+    lv_obj_set_flex_flow(scr, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_style_pad_row(scr, 0, 0);
+    lv_obj_t *title = lv_label_create(scr);
+    apply_bar_style_ts(title, UI_BROWN, UI_CREAM);
+    lv_obj_set_width(title, lv_pct(100));
+    lv_label_set_text(title, "TOOLS");
+    lv_obj_set_style_text_align(title, LV_TEXT_ALIGN_CENTER, 0);
+    s_wifi_status = lv_label_create(scr);
+    apply_bar_style_ts(s_wifi_status, UI_YELLOW, UI_BROWN);
+    lv_obj_set_width(s_wifi_status, lv_pct(100));
+    lv_obj_set_style_text_font(s_wifi_status, &lv_font_montserrat_10, 0);
+    lv_label_set_text(s_wifi_status, "WiFi: OFF");
+    lv_obj_t *menu = lv_obj_create(scr);
+    lv_obj_set_width(menu, lv_pct(100));
+    lv_obj_set_flex_grow(menu, 1);
+    lv_obj_set_flex_flow(menu, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_style_bg_color(menu, lv_color_hex(UI_YELLOW), 0);
+    lv_obj_set_style_bg_opa(menu, LV_OPA_COVER, 0);
+    lv_obj_set_style_border_width(menu, 0, 0);
+    lv_obj_set_style_pad_all(menu, 4, 0);
+    lv_obj_set_style_pad_row(menu, 4, 0);
+    lv_obj_set_scrollbar_mode(menu, LV_SCROLLBAR_MODE_AUTO);
+    s_wifi_btn = lv_button_create(menu);
+    lv_obj_set_width(s_wifi_btn, lv_pct(100));
+    lv_obj_set_style_bg_color(s_wifi_btn, lv_color_hex(UI_CREAM), 0);
+    lv_obj_set_style_bg_opa(s_wifi_btn, LV_OPA_COVER, 0);
+    lv_obj_set_style_border_width(s_wifi_btn, 0, 0);
+    lv_obj_set_style_pad_ver(s_wifi_btn, 8, 0);
+    lv_obj_set_style_pad_hor(s_wifi_btn, 8, 0);
+    lv_obj_set_style_shadow_width(s_wifi_btn, 0, 0);
+    lv_obj_set_style_bg_color(s_wifi_btn, lv_color_hex(UI_BROWN), LV_STATE_FOCUSED);
+    lv_obj_set_style_text_color(s_wifi_btn, lv_color_hex(UI_BROWN), 0);
+    lv_obj_set_style_text_color(s_wifi_btn, lv_color_hex(UI_CREAM), LV_STATE_FOCUSED);
+    lv_obj_t *wifi_lbl = lv_label_create(s_wifi_btn);
+    lv_label_set_text(wifi_lbl, "\xf0\x9f\x93\xa1 Start WiFi");
+    lv_obj_set_style_text_font(wifi_lbl, &lv_font_montserrat_14, 0);
+    lv_obj_center(wifi_lbl);
+    lv_group_add_obj(group, s_wifi_btn);
+    s_local_fm_btn = lv_button_create(menu);
+    lv_obj_set_width(s_local_fm_btn, lv_pct(100));
+    lv_obj_set_style_bg_color(s_local_fm_btn, lv_color_hex(UI_CREAM), 0);
+    lv_obj_set_style_bg_opa(s_local_fm_btn, LV_OPA_COVER, 0);
+    lv_obj_set_style_border_width(s_local_fm_btn, 0, 0);
+    lv_obj_set_style_pad_ver(s_local_fm_btn, 8, 0);
+    lv_obj_set_style_pad_hor(s_local_fm_btn, 8, 0);
+    lv_obj_set_style_shadow_width(s_local_fm_btn, 0, 0);
+    lv_obj_set_style_bg_color(s_local_fm_btn, lv_color_hex(UI_BROWN), LV_STATE_FOCUSED);
+    lv_obj_set_style_text_color(s_local_fm_btn, lv_color_hex(UI_BROWN), 0);
+    lv_obj_set_style_text_color(s_local_fm_btn, lv_color_hex(UI_CREAM), LV_STATE_FOCUSED);
+    lv_obj_t *fm_lbl = lv_label_create(s_local_fm_btn);
+    lv_label_set_text(fm_lbl, "\xf0\x9f\x93\x81 Local File Manager");
+    lv_obj_set_style_text_font(fm_lbl, &lv_font_montserrat_14, 0);
+    lv_obj_center(fm_lbl);
+    lv_group_add_obj(group, s_local_fm_btn);
+    lv_obj_t *spacer = lv_obj_create(menu);
+    lv_obj_set_flex_grow(spacer, 1);
+    lv_obj_set_style_bg_opa(spacer, LV_OPA_TRANSP, 0);
+    lv_obj_set_style_border_width(spacer, 0, 0);
+    s_back_btn = lv_button_create(menu);
+    lv_obj_set_width(s_back_btn, lv_pct(100));
+    lv_obj_set_style_bg_color(s_back_btn, lv_color_hex(UI_CREAM), 0);
+    lv_obj_set_style_bg_opa(s_back_btn, LV_OPA_COVER, 0);
+    lv_obj_set_style_border_width(s_back_btn, 0, 0);
+    lv_obj_set_style_pad_ver(s_back_btn, 8, 0);
+    lv_obj_set_style_pad_hor(s_back_btn, 8, 0);
+    lv_obj_set_style_shadow_width(s_back_btn, 0, 0);
+    lv_obj_set_style_bg_color(s_back_btn, lv_color_hex(UI_BROWN), LV_STATE_FOCUSED);
+    lv_obj_set_style_text_color(s_back_btn, lv_color_hex(UI_BROWN), 0);
+    lv_obj_set_style_text_color(s_back_btn, lv_color_hex(UI_CREAM), LV_STATE_FOCUSED);
+    lv_obj_t *back_lbl = lv_label_create(s_back_btn);
+    lv_label_set_text(back_lbl, "\xe2\xac\x85\xef\xb8\x8f Back to ROM Loader");
+    lv_obj_set_style_text_font(back_lbl, &lv_font_montserrat_14, 0);
+    lv_obj_center(back_lbl);
+    lv_group_add_obj(group, s_back_btn);
+    lv_obj_t *hint = lv_label_create(scr);
+    apply_bar_style_ts(hint, UI_BROWN, UI_CREAM);
+    lv_obj_set_width(hint, lv_pct(100));
+    lv_label_set_text(hint, "A:Select  B:Back");
+    lv_obj_set_style_text_align(hint, LV_TEXT_ALIGN_CENTER, 0);
+    lv_screen_load(scr);
+    if (s_wifi_btn) lv_group_focus_obj(s_wifi_btn);
+    tools_screen_update_wifi_status();
+}
+
+void tools_screen_set_return_cb(void (*cb)(lv_group_t *group)) {
+    s_return_to_main_cb = cb;
+}
