@@ -41,7 +41,7 @@ static void format_size_lfm(char *buf, size_t bufsz, size_t bytes) {
     else if (bytes >= 1024)
         snprintf(buf, bufsz, "%.1f KB", (double)bytes / 1024);
     else
-        snprintf(buf, bufsz, "&zu B", bytes);
+        snprintf(buf, bufsz, "%zu B", bytes);
 }
 
 static void apply_bar_style_lfm(lv_obj_t *label, uint32_t bg, uint32_t fg) {
@@ -133,7 +133,7 @@ void local_fm_show(lv_group_t *group) {
         lv_obj_set_width(hint, lv_pct(100));
         lv_label_set_text(hint, "A:Open  B:Back");
         lv_obj_set_style_text_align(hint, LV_TEXT_ALIGN_CENTER, 0);
-        lv_screan_load(scr);
+        lv_screen_load(scr);
     }
     lv_label_set_text(s_path_label, s_current_dir);
     lv_obj_clean(s_file_list);
