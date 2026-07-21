@@ -1,1 +1,18 @@
-LyoKICogV2lGaSBGaWxlIE1hbmFnZXIgZm9yIFhpYW9taWFvIExvYWRlcgogKgogKiBFU1AzMiBXaUZpIEFQICsgSFRUUCBzZXJ2ZXIgcHJvdmlkaW5nIHdlYi1iYXNlZCBmaWxlIG1hbmFnZW1lbnQKICogZm9yIHRoZSBTRCBjYXJkLiBBY2Nlc3NpYmxlIGF0IGh0dHA6Ly8xOTIuMTY4LjQuMS8KICovCgojaWZuZGVmIFdJRklfRklMRV9NQU5BR0VSX0gKI2RlZmluZSBXSUZJX0ZJTEVfTUFOQUdFUl9ICgojaW5jbHVkZSAiZXNwX2Vyci5oIgoKZXNwX2Vycl90IHdpZmlfZmlsZV9tYW5hZ2VyX3N0YXJ0KHZvaWQpOwp2b2lkIHdpZmlfZmlsZV9tYW5hZ2VyX3N0b3Aodm9pZCk7CmJvb2wgd2lmaV9maWxlX21hbmFnZXJfaXNfcnVubmluZyh2b2lkKTsKY29uc3QgY2hhciAqd2lmaV9maWxlX21hbmFnZXJfZ2V0X2lwKHZvaWQpOwoKI2VuZGlmIC8qIFdJRklfRklMRV9NQU5BR0VSX0ggKi8=
+/*
+ * WiFi File Manager for Xiaomiao Loader
+ *
+ * ESP32 WiFi AP + HTTP server providing web-based file management
+ * for the SD card. Accessible at http://192.168.4.1/
+ */
+
+#ifndef WIFI_FILE_MANAGER_H
+#define WIFI_FILE_MANAGER_H
+
+#include "esp_err.h"
+
+esp_err_t wifi_file_manager_start(void);
+void wifi_file_manager_stop(void);
+bool wifi_file_manager_is_running(void);
+const char *wifi_file_manager_get_ip(void);
+
+#endif /* WIFI_FILE_MANAGER_H */
