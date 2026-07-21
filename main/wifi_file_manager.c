@@ -226,7 +226,7 @@ static esp_err_t root_get_handler(httpd_req_t *req)
         while ((ent = readdir(dir)) != NULL) {
             if (ent->d_name[0] == '.') continue;
 
-            char full_path[512];
+            char full_path[1024];
             snprintf(full_path, sizeof(full_path), "%s/%s", dir_path, ent->d_name);
 
             struct stat st;
@@ -245,14 +245,14 @@ static esp_err_t root_get_handler(httpd_req_t *req)
 
             httpd_resp_sendstr_chunk(req, "<tr>");
             if (is_dir) {
-                char buf[512];
+                char buf[1024];
                 snprintf(buf, sizeof(buf),
                          "<td class='folder'>📁 <a href='/?dir=%s'>%s/</a></td>",
                          rel, ent->d_name);
                 httpd_resp_sendstr_chunk(req, buf);
                 httpd_resp_sendstr_chunk(req, "<td class='size'>-</td>");
             } else {
-                char buf[512];
+                char buf[1024];
                 snprintf(buf, sizeof(buf),
                          "<td class='file'>📄 <a href='/download?file=%s'>%s</a></td>",
                          rel, ent->d_name);
@@ -341,7 +341,7 @@ static esp_err_t download_get_handler(httpd_req_t *req)
     }
 
     /* Set Content-Disposition for download */
-    char disp[256];
+    char disp[512];
     snprintf(disp, sizeof(disp), "attachment; filename=\"%s\"", strrchr(full_path, '/') + 1);
     httpd_resp_set_hdr(req, "Content-Disposition", disp);
 
@@ -430,7 +430,7 @@ static esp_err_t upload_post_handler(httpd_req_t *req)
     }
 
     /* Save to SD */
-    char full_path[512];
+    char full_path[1024];
     snprintf(full_path, sizeof(full_path), "%s/%s", SD_BASE_PATH, filename);
 
     FILE *f = fopen(full_path, "wb");
@@ -533,7 +533,7 @@ static esp_err_t mkdir_post_handler(httpd_req_t *req)
         return ESP_FAIL;
     }
 
-    char full_path[512];
+    char full_path[1024];
     snprintf(full_path, sizeof(full_path), "%s/%s", SD_BASE_PATH, decoded);
     free(decoded);
 
