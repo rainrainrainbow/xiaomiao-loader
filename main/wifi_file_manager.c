@@ -263,7 +263,7 @@ static esp_err_t root_get_handler(httpd_req_t *req)
             }
             /* Delete action */
             {
-                char buf[256];
+                char buf[1024];
                 snprintf(buf, sizeof(buf),
                          "<td class='actions'><a href='/delete?file=%s' class='del-btn' onclick=\"return confirm('Delete %s?')\">🗑</a></td>",
                          rel, ent->d_name);
@@ -512,7 +512,7 @@ static esp_err_t delete_get_handler(httpd_req_t *req)
 
 static esp_err_t mkdir_post_handler(httpd_req_t *req)
 {
-    char buf[256];
+    char buf[1024];
     size_t len = MIN(req->content_len, sizeof(buf) - 1);
     int ret = httpd_req_recv(req, buf, len);
     if (ret <= 0) {
