@@ -47,6 +47,11 @@
 #include "sdmmc_cmd.h"
 #include "sdkconfig.h"
 
+/* ── File Manager & Tools includes ────────────────────────────────────── */
+#include "wifi_file_manager.h"
+#include "local_file_manager.h"
+#include "tools_screen.h"
+
 /* ── Pin & hardware constants (from original xiaomiao firmware) ────────── */
 
 #define LCD_HOST                    SPI2_HOST
@@ -1093,13 +1098,17 @@ static void on_rom_key(lv_event_t *e)
         if (grp) {
             ui_build_about(grp);
         }
+    } else if (key == LV_KEY_RIGHT) {
+        if (grp) {
+            tools_screen_show(grp);
+        }
     } else if (key == LV_KEY_UP) {
         lv_group_focus_prev(grp);
         lv_obj_t *focused = lv_group_get_focused(grp);
         if (focused) {
             lv_obj_scroll_to_view(focused, LV_ANIM_OFF);
         }
-    } else if (key == LV_KEY_DOWN || key == LV_KEY_RIGHT) {
+    } else if (key == LV_KEY_DOWN) {
         lv_group_focus_next(grp);
         lv_obj_t *focused = lv_group_get_focused(grp);
         if (focused) {
@@ -1228,7 +1237,7 @@ static void ui_build_main(lv_group_t *group)
     lv_obj_t *hint = lv_label_create(scr);
     apply_bar_style(hint, UI_BROWN, UI_CREAM);
     lv_obj_set_width(hint, lv_pct(100));
-    lv_label_set_text(hint, "A:Load  Left:About");
+    lv_label_set_text(hint, "A:Load  Left:About  Right:Tools");
     lv_obj_set_style_text_align(hint, LV_TEXT_ALIGN_CENTER, 0);
 
     lv_screen_load(scr);
@@ -1485,6 +1494,11 @@ static void ui_show_skip(const rom_entry_t *rom)
     lv_refr_now(NULL);
 }
 
+static void ui_return_to_main(lv_group_t *group)
+{
+    ui_build_main(group);
+}
+
 /* ── LVGL task + app_main ──────────────────────────────────────────────── */
 
 static void lvgl_task(void *arg)
@@ -1508,6 +1522,8 @@ static void lvgl_task(void *arg)
     ota0_load_state();
 
     ui_build_main(group);
+
+    tools_screen_set_return_cb(ui_return_to_main);
 
     while (true) {
         if (s_flash_rom_idx >= 0) {
