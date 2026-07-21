@@ -1,1 +1,16 @@
-LyoKICogTG9jYWwgRmlsZSBNYW5hZ2VyIGZvciBYaWFvbWlhbyBMb2FkZXIKICoKICogT24tZGV2aWNlIGZpbGUgYnJvd3NlciB1c2luZyBMVkdMIFVJLgogKiBCcm93c2UgU0QgY2FyZCwgbmF2aWdhdGUgZGlyZWN0b3JpZXMsIGRlbGV0ZSBmaWxlcy4KICogQWNjZXNzZWQgdmlhIHRoZSBST00gTG9hZGVyIG1lbnUuCiAqLwoKI2lmbmRlZiBMT0NBTF9GSUxFX01BTkFHRVJfSAoJI2RlZmluZSBMT0NBTF9GSUxFX01BTkFHRVJfSAoKI2luY2x1ZGUgImx2Z2wuaCIKCnZvaWQgbG9jYWxfZm1fc2hvdyhsdl9ncm91cF90ICpncm91cCk7CgojZW5kaWYgLyogTE9DQUxfRklMRV9NQU5BR0VSX0ggKi8=
+/*
+ * Local File Manager for Xiaomiao Loader
+ *
+ * On-device file browser using LVGL UI.
+ * Browse SD card, navigate directories, delete files.
+ * Accessed via the ROM Loader menu.
+ */
+
+#ifndef LOCAL_FILE_MANAGER_H
+#define LOCAL_FILE_MANAGER_H
+
+#include "lvgl.h"
+
+void local_fm_show(lv_group_t *group);
+
+#endif /* LOCAL_FILE_MANAGER_H */
