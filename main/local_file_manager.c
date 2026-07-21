@@ -1,1 +1,205 @@
-I2luY2x1ZGUgPHN0ZGlvLmg+CiNpbmNsdWRlIDxzdGRsaWIuaD4KI2luY2x1ZGUgPHN0cmluZy5oPgojaW5jbHVkZSA8c3lzL3N0YXQuaD4KI2luY2x1ZGUgPGRpcmVudC5oPgojaW5jbHVkZSA8dW5pc3RkLmg+CgojaW5jbHVkZSAiZXNwX2xvZy5oIgojaW5jbHVkZSAiZXNwX2Vyci5oIgoKI2luY2x1ZGUgImxvY2FsX2ZpbGVfbWFuYWdlci5oIgoKX19hdHRyaWJ1dGVfXygodW51c2VkKSkgc3RhdGljIGNvbnN0IGNoYXIgKlRBRyA9ICJsb2NhbF9mbSI7CgojZGVmaW5lIFVJX1lFTExPVyAgIDB4RjZEMzRBCiNkZWZpbmUgVUlfQkxBQ0sgICAgMHgxQjE3MTMKI2RlZmluZSBVSV9CUk9XTiAgICAweDVDNDIyMAojZGVmaW5lIFVJX1JFRCAgICAgIDB4RTY0QjNDCiNkZWZpbmUgVUlfQ1JFQU0gICAgMHhGRkYzQjAKI2RlZmluZSBVSV9HUkVFTiAgICAweDJERDQ2NgoKc3RhdGljIGx2X29ial90ICpzX2ZtX3NjcmVlbiA9IE5VTEw7CnN0YXRpYyBsdl9vYmpfdCAqc19maWxlX2xpc3QgPSBOVUxMOwpzdGF0aWMgbHZfb2JqX3QgKnNfcGF0aF9sYWJlbCA9IE5VTEw7CnN0YXRpYyBsdl9ncm91cF90ICpzX2ZtX2dyb3VwID0gTlVMTDsKc3RhdGljIGNoYXIgc19jdXJyZW50X2RpclsxMDI0XSA9ICIvc2RjYXJkIjsKCnN0YXRpYyB2b2lkIG5vcm1hbGl6ZV9wYXRoKGNoYXIgKmJ1Ziwgc2l6ZV90IGJ1ZnN6KSB7CiAgICBzaXplX3QgbGVuID0gc3RybGVuKGJ1Zik7CiAgICB3aGlsZSAobGVuID4gMSAmJiBidWZbbGVuIC0gMV0gPT0gJy8nKSBidWZbLS1sZW5dID0gJ1wwJzsKfQoKc3RhdGljIHZvaWQgam9pbl9wYXRoKGNoYXIgKmJ1Ziwgc2l6ZV90IGJ1ZnN6LCBjb25zdCBjaGFyICphLCBjb25zdCBjaGFyICpiKSB7CiAgICBzbnByaW50ZihidWYsIGJ1ZnN6LCAiJXMvJXMiLCBhLCBiKTsKICAgIG5vcm1hbGl6ZV9wYXRoKGJ1ZiwgYnVmc3opOwp9CgpzdGF0aWMgdm9pZCBmb3JtYXRfc2l6ZV9sZm0oY2hhciAqYnVmLCBzaXplX3QgYnVmc3osIHNpemVfdCBieXRlcykgewogICAgaWYgKGJ5dGVzID49IDEwMjQgKiAxMDI0KQogICAgICAgIHNucHJpbnRmKGJ1ZiwgYnVmc3osICIlLjFmIE1CIiwgKGRvdWJsZSlieXRlcyAvICgxMDI0ICogMTAyNCkpOwogICAgZWxzZSBpZiAoYnl0ZXMgPj0gMTAyNCkKICAgICAgICBzbnByaW50ZihidWYsIGJ1ZnN6LCAiJS4xZiBLQiIsIChkb3VibGUpYnl0ZXMgLyAxMDI0KTsKICAgIGVsc2UKICAgICAgICBzbnByaW50ZihidWYsIGJ1ZnN6LCAiJnp1IEIiLCBieXRlcyk7Cn0KCnN0YXRpYyB2b2lkIGFwcGx5X2Jhcl9zdHlsZV9sZm0obHZfb2JqX3QgKmxhYmVsLCB1aW50MzJfdCBiZywgdWludDMyX3QgZmcpIHsKICAgIGx2X29ial9zZXRfc3R5bGVfYmdfY29sb3IobGFiZWwsIGx2X2NvbG9yX2hleChiZyksIDApOwogICAgbHZfb2JqX3NldF9zdHlsZV9iZ19vcGEobGFiZWwsIExWX09QQV9DT1ZFUiwgMCk7CiAgICBsdl9vYmpfc2V0X3N0eWxlX3RleHRfY29sb3IobGFiZWwsIGx2X2NvbG9yX2hleChmZyksIDApOwogICAgbHZfb2JqX3NldF9zdHlsZV9wYWRfdmVyKGxhYmVsLCAyLCAwKTsKICAgIGx2X29ial9zZXRfc3R5bGVfcGFkX2hvcihsYWJlbCwgNCwgMCk7Cn0KCnN0YXRpYyB2b2lkIGVudGVyX2Rpcihjb25zdCBjaGFyICpwYXRoKSB7CiAgICBzdHJuY3B5KHNfY3VycmVudF9kaXIsIHBhdGgsIHNpemVvZihzX2N1cnJlbnRfZGlyKSAtIDEpOwogICAgbm9ybWFsaXplX3BhdGgoc19jdXJyZW50X2Rpciwgc2l6ZW9mKHNfY3VycmVudF9kaXIpKTsKfQoKc3RhdGljIHZvaWQgZ29fdXAodm9pZCkgewogICAgY2hhciAqbGFzdF9zbGFzaCA9IHN0cnJjaHIoc19jdXJyZW50X2RpciwgJy8nKTsKICAgIGlmIChsYXN0X3NsYXNoICYmIGxhc3Rfc2xhc2ggIT0gc19jdXJyZW50X2RpcikgKmxhc3Rfc2xhc2ggPSAnXDAnOwp9CgpzdGF0aWMgdm9pZCBvbl9maWxlX2NsaWNrZWQobHZfZXZlbnRfdCAqZSkgewogICAgY29uc3QgY2hhciAqbmFtZSA9IChjb25zdCBjaGFyICopbHZfZXZlbnRfZ2V0X3VzZXJfZGF0YShlKTsKICAgIGlmICghbmFtZSkgcmV0dXJuOwogICAgY2hhciBmdWxsX3BhdGhbMTAyNF07CiAgICBqb2luX3BhdGgoZnVsbF9wYXRoLCBzaXplb2YoZnVsbF9wYXRoKSwgc19jdXJyZW50X2RpciwgbmFtZSk7CiAgICBzdHJ1Y3Qgc3RhdCBzdDsKICAgIGlmIChzdGF0KGZ1bGxfcGF0aCwgJnN0KSA9PSAwICYmIFNfSVNESVIoc3Quc3RfbW9kZSkpIHsKICAgICAgICBlbnRlcl9kaXIoZnVsbF9wYXRoKTsKICAgICAgICBsb2NhbF9mbV9zaG93KHNfZm1fZ3JvdXApOwogICAgfQp9CgpfX2F0dHJpYnV0ZV9fKCh1bnVzZWQpKSBzdGF0aWMgdm9pZCBvbl9maWxlX2tleShsdl9ldmVudF90ICplKSB7CiAgICB1aW50MzJfdCBrZXkgPSBsdl9ldmVudF9nZXRfa2V5KGUpOwogICAgbHZfZ3JvdXBfdCAqZ3JwID0gKGx2X2dyb3VwX3QgKilsdl9ldmVudF9nZXRfdXNlcl9kYXRhKGUpOwogICAgaWYgKGtleSA9PSBMVl9LRVlfRVNDKSB7IGdvX3VwKCk7IGxvY2FsX2ZtX3Nob3coZ3JwKTsgfQogICAgZWxzZSBpZiAoa2V5ID09IExWX0tFWV9VUCkgeyBsdl9ncm91cF9mb2N1c19wcmV2KGdycCk7IGx2X29ial90ICpmID0gbHZfZ3JvdXBfZ2V0X2ZvY3VzZWQoZ3JwKTsgaWYgKGYpIGx2X29ial9zY3JvbGxfdG9fdmlldyhmLCBMVl9BTklNX09GRik7IH0KICAgIGVsc2UgaWYgKGtleSA9PSBMVl9LRVlfRE9XTikgeyBsdl9ncm91cF9mb2N1c19uZXh0KGdycCk7IGx2X29ial90ICpmID0gbHZfZ3JvdXBfZ2V0X2ZvY3VzZWQoZ3JwKTsgaWYgKGYpIGx2X29ial9zY3JvbGxfdG9fdmlldyhmLCBMVl9BTklNX09GRik7IH0KICAgIGVsc2UgaWYgKGtleSA9PSBMVl9LRVlfRU5URVIpIHsKICAgICAgICBsdl9vYmpfdCAqZm9jdXNlZCA9IGx2X2dyb3VwX2dldF9mb2N1c2VkKGdycCk7CiAgICAgICAgaWYgKGZvY3VzZWQpIHsKICAgICAgICAgICAgY29uc3QgY2hhciAqbmFtZSA9IChjb25zdCBjaGFyICopbHZfb2JqX2dldF91c2VyX2RhdGEoZm9jdXNlZCk7CiAgICAgICAgICAgIGlmIChuYW1lKSB7CiAgICAgICAgICAgICAgICBjaGFyIGZ1bGxfcGF0aFsxMDI0XTsKICAgICAgICAgICAgICAgIGpvaW5fcGF0aChmdWxsX3BhdGgsIHNpemVvZihmdWxsX3BhdGgpLCBzX2N1cnJlbnRfZGlyLCBuYW1lKTsKICAgICAgICAgICAgICAgIHN0cnVjdCBzdGF0IHN0OwogICAgICAgICAgICAgICAgaWYgKHN0YXQoZnVsbF9wYXRoLCAmc3QpID09IDAgJiYgU19JU0RJUihzdC5zdF9tb2RlKSkgewogICAgICAgICAgICAgICAgICAgIGVudGVyX2RpcihmdWxsX3BhdGgpOwogICAgICAgICAgICAgICAgICAgIGxvY2FsX2ZtX3Nob3coZ3JwKTsKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgfQogICAgICAgIH0KICAgIH0KfQoKdm9pZCBsb2NhbF9mbV9zaG93KGx2X2dyb3VwX3QgKmdyb3VwKSB7CiAgICBzX2ZtX2dyb3VwID0gZ3JvdXA7CiAgICBpZiAoc19mbV9zY3JlZW4pIHsgbHZfc2NyZWVuX2xvYWQoc19mbV9zY3JlZW4pOyBsdl9vYmpfY2xlYW4oc19maWxlX2xpc3QpOyB9CiAgICBlbHNlIHsKICAgICAgICBsdl9vYmpfdCAqc2NyID0gbHZfb2JqX2NyZWF0ZShOVUxMKTsKICAgICAgICBzX2ZtX3NjcmVlbiA9IHNjcjsKICAgICAgICBsdl9vYmpfc2V0X3N0eWxlX2JnX2NvbG9yKHNjciwgbHZfY29sb3JfaGV4KFVJX1lFTExPVyksIDApOwogICAgICAgIGx2X29ial9zZXRfc3R5bGVfYmdfb3BhKHNjciwgTFZfT1BBX0NPVkVSLCAwKTsKICAgICAgICBsdl9vYmpfc2V0X3N0eWxlX3BhZF9hbGwoc2NyLCAwLCAwKTsKICAgICAgICBsdl9vYmpfc2V0X2ZsZXhfZmxvdyhzY3IsIExWX0ZMRVhfRkxPV19DT0xVTU4pOwogICAgICAgIGx2X29ial9zZXRfc3R5bGVfcGFkX3JvdyhzY3IsIDAsIDApOwogICAgICAgIGx2X29ial90ICp0aXRsZSA9IGx2X2xhYmVsX2NyZWF0ZShzY3IpOwogICAgICAgIGFwcGx5X2Jhcl9zdHlsZV9sZm0odGl0bGUsIFVJX0JST1dOLCBVSV9DUkVBTSk7CiAgICAgICAgbHZfb2JqX3NldF93aWR0aCh0aXRsZSwgbHZfcGN0KDEwMCkpOwogICAgICAgIGx2X2xhYmVsX3NldF90ZXh0KHRpdGxlLCAiRklMRSBNQU5BR0VSIik7CiAgICAgICAgbHZfb2JqX3NldF9zdHlsZV90ZXh0X2FsaWduKHRpdGxlLCBMVl9URVhUX0FMSUdOX0NFTlRFUiwgMCk7CiAgICAgICAgc19wYXRoX2xhYmVsID0gbHZfbGFiZWxfY3JlYXRlKHNjcik7CiAgICAgICAgYXBwbHlfYmFyX3N0eWxlX2xmbShzX3BhdGhfbGFiZWwsIFVJX1lFTExPVywgVUlfQlJPV04pOwogICAgICAgIGx2X29ial9zZXRfd2lkdGgoc19wYXRoX2xhYmVsLCBsdl9wY3QoMTAwKSk7CiAgICAgICAgbHZfb2JqX3NldF9zdHlsZV90ZXh0X2ZvbnQoc19wYXRoX2xhYmVsLCAmbHZfZm9udF9tb250c2VycmF0XzEwLCAwKTsKICAgICAgICBzX2ZpbGVfbGlzdCA9IGx2X29ial9jcmVhdGUoc2NyKTsKICAgICAgICBsdl9vYmpfc2V0X3dpZHRoKHNfZmlsZV9saXN0LCBsdl9wY3QoMTAwKSk7CiAgICAgICAgbHZfb2JqX3NldF9mbGV4X2dyb3coc19maWxlX2xpc3QsIDEpOwogICAgICAgIGx2X29ial9zZXRfZmxleF9mbG93KHNfZmlsZV9saXN0LCBMVl9GTEVYX0ZMT1dfQ09MVU1OKTsKICAgICAgICBsdl9vYmpfc2V0X3N0eWxlX2JnX2NvbG9yKHNfZmlsZV9saXN0LCBsdl9jb2xvcl9oZXgoVUlfWUVMTE9XKSwgMCk7CiAgICAgICAgbHZfb2JqX3NldF9zdHlsZV9iZ19vcGEoc19maWxlX2xpc3QsIExWX09QQV9DT1ZFUiwgMCk7CiAgICAgICAgbHZfb2JqX3NldF9zdHlsZV9ib3JkZXJfd2lkdGgoc19maWxlX2xpc3QsIDAsIDApOwogICAgICAgIGx2X29ial9zZXRfc3R5bGVfcGFkX2FsbChzX2ZpbGVfbGlzdCwgMiwgMCk7CiAgICAgICAgbHZfb2JqX3NldF9zdHlsZV9wYWRfcm93KHNfZmlsZV9saXN0LCAxLCAwKTsKICAgICAgICBsdl9vYmpfc2V0X3Njcm9sbGJhcl9tb2RlKHNfZmlsZV9saXN0LCBMVl9TQ1JPTExCQVJfTU9ERV9BVVRPKTsKICAgICAgICBsdl9vYmpfY2xlYXJfZmxhZyhzX2ZpbGVfbGlzdCwgTFZfT0JKX0ZMQUdfU0NST0xMX0VMQVNUSUMpOwogICAgICAgIGx2X29ial90ICpoaW50ID0gbHZfbGFiZWxfY3JlYXRlKHNjcik7CiAgICAgICAgYXBwbHlfYmFyX3N0eWxlX2xmbShoaW50LCBVSV9CUk9XTiwgVUlfQ1JFQU0pOwogICAgICAgIGx2X29ial9zZXRfd2lkdGgoaGludCwgbHZfcGN0KDEwMCkpOwogICAgICAgIGx2X2xhYmVsX3NldF90ZXh0KGhpbnQsICJBOk9wZW4gIEI6QmFjayIpOwogICAgICAgIGx2X29ial9zZXRfc3R5bGVfdGV4dF9hbGlnbihoaW50LCBMVl9URVhUX0FMSUdOX0NFTlRFUiwgMCk7CiAgICAgICAgbHZfc2NyZWFuX2xvYWQoc2NyKTsKICAgIH0KICAgIGx2X2xhYmVsX3NldF90ZXh0KHNfcGF0aF9sYWJlbCwgc19jdXJyZW50X2Rpcik7CiAgICBsdl9vYmpfY2xlYW4oc19maWxlX2xpc3QpOwogICAgRElSICpkaXIgPSBvcGVuZGlyKHNfY3VycmVudF9kaXIpOwogICAgaWYgKCFkaXIpIHsKICAgICAgICBsdl9vYmpfdCAqbGJsID0gbHZfbGFiZWxfY3JlYXRlKHNfZmlsZV9saXN0KTsKICAgICAgICBsdl9vYmpfc2V0X3dpZHRoKGxibCwgbHZfcGN0KDEwMCkpOwogICAgICAgIGx2X29ial9zZXRfc3R5bGVfdGV4dF9jb2xvcihsYmwsIGx2X2NvbG9yX2hleChVSV9SRUQpLCAwKTsKICAgICAgICBsdl9sYWJlbF9zZXRfdGV4dChsYmwsICJDYW5ub3Qgb3BlbiBkaXJlY3RvcnkiKTsKICAgICAgICBsdl9vYmpfc2V0X3N0eWxlX3RleHRfYWxpZ24obGJsLCBMVl9URVhUX0FMSUdOX0NFTlRFUiwgMCk7CiAgICAgICAgcmV0dXJuOwogICAgfQogICAgaWYgKHN0cmNtcChzX2N1cnJlbnRfZGlyLCAiL3NkY2FyZCIpICE9IDApIHsKICAgICAgICBsdl9vYmpfdCAqYnRuID0gbHZfYnV0dG9uX2NyZWF0ZShzX2ZpbGVfbGlzdCk7CiAgICAgICAgbHZfb2JqX3NldF93aWR0aChidG4sIGx2X3BjdCgxMDApKTsKICAgICAgICBsdl9vYmpfc2V0X3N0eWxlX2JnX2NvbG9yKGJ0biwgbHZfY29sb3JfaGV4KFVJX0NSRUFNKSwgMCk7CiAgICAgICAgbHZfb2JqX3NldF9zdHlsZV9iZ19vcGEoYnRuLCBMVl9PUEFfQ09WRVIsIDApOwogICAgICAgIGx2X29ial9zZXRfc3R5bGVfYm9yZGVyX3dpZHRoKGJ0biwgMCwgMCk7CiAgICAgICAgbHZfb2JqX3NldF9zdHlsZV9wYWRfdmVyKGJ0biwgMywgMCk7CiAgICAgICAgbHZfb2JqX3NldF9zdHlsZV9wYWRfaG9yKGJ0biwgNiwgMCk7CiAgICAgICAgbHZfb2JqX3NldF9zdHlsZV9zaGFkb3dfd2lkdGgoYnRuLCAwLCAwKTsKICAgICAgICBsdl9vYmpfc2V0X3N0eWxlX2JnX2NvbG9yKGJ0biwgbHZfY29sb3JfaGV4KFVJX0JST1dOKSwgTFZfU1RBVEVfRk9DVVNFRCk7CiAgICAgICAgbHZfb2JqX3NldF9zdHlsZV90ZXh0X2NvbG9yKGJ0biwgbHZfY29sb3JfaGV4KFVJX0JST1dOKSwgMCk7CiAgICAgICAgbHZfb2JqX3NldF9zdHlsZV90ZXh0X2NvbG9yKGJ0biwgbHZfY29sb3JfaGV4KFVJX0NSRUFNKSwgTFZfU1RBVEVfRk9DVVNFRCk7CiAgICAgICAgbHZfb2JqX3QgKmxibCA9IGx2X2xhYmVsX2NyZWF0ZShidG4pOwogICAgICAgIGx2X2xhYmVsX3NldF90ZXh0KGxibCwgIlx4ZjBceDlmXHg5M1x4ODEgLi4vIik7CiAgICAgICAgbHZfb2JqX3NldF9zdHlsZV90ZXh0X2ZvbnQobGJsLCAmbHZfZm9udF9tb250c2VycmF0XzEyLCAwKTsKICAgICAgICBsdl9vYmpfY2VudGVyKGxibCk7CiAgICAgICAgbHZfb2JqX2FkZF9ldmVudF9jYihidG4sIG9uX2ZpbGVfY2xpY2tlZCwgTFZfRVZFTlRfU0hPUlRfQ0xJQ0tFRCwgKHZvaWQgKikiLi4iKTsKICAgICAgICBsdl9ncm91cF9hZGRfb2JqKGdyb3VwLCBidG4pOwogICAgfQogICAgc3RydWN0IGRpcmVudCAqZW50OwogICAgd2hpbGUgKChlbnQgPSByZWFkZGlyKGRpcikpICE9IE5VTEwpIHsKICAgICAgICBpZiAoZW50LT5kX25hbWVbMF0gPT0gJy4nKSBjb250aW51ZTsKICAgICAgICBjaGFyIGZ1bGxfcGF0aFsxMDI0XTsKICAgICAgICBqb2luX3BhdGgoZnVsbF9wYXRoLCBzaXplb2YoZnVsbF9wYXRoKSwgc19jdXJyZW50X2RpciwgZW50LT5kX25hbWUpOwogICAgICAgIHN0cnVjdCBzdGF0IHN0OwogICAgICAgIGJvb2wgaXNfZGlyID0gZmFsc2U7CiAgICAgICAgaWYgKHN0YXQoZnVsbF9wYXRoLCAmc3QpID09IDApIGlzX2RpciA9IFNfSVNESVIoc3Quc3RfbW9kZSk7CiAgICAgICAgbHZfb2JqX3QgKmJ0biA9IGx2X2J1dHRvbl9jcmVhdGUoc19maWxlX2xpc3QpOwogICAgICAgIGx2X29ial9zZXRfd2lkdGgoYnRuLCBsdl9wY3QoMTAwKSk7CiAgICAgICAgbHZfb2JqX3NldF9zdHlsZV9iZ19jb2xvcihidG4sIGx2X2NvbG9yX2hleChVSV9DUkVBTSksIDApOwogICAgICAgIGx2X29ial9zZXRfc3R5bGVfYmdfb3BhKGJ0biwgTFZfT1BBX0NPVkVSLCAwKTsKICAgICAgICBsdl9vYmpfc2V0X3N0eWxlX2JvcmRlcl93aWR0aChidG4sIDAsIDApOwogICAgICAgIGx2X29ial9zZXRfc3R5bGVfcGFkX3ZlcihidG4sIDMsIDApOwogICAgICAgIGx2X29ial9zZXRfc3R5bGVfcGFkX2hvcihidG4sIDYsIDApOwogICAgICAgIGx2X29ial9zZXRfc3R5bGVfc2hhZG93X3dpZHRoKGJ0biwgMCwgMCk7CiAgICAgICAgbHZfb2JqX3NldF9zdHlsZV9iZ19jb2xvcihidG4sIGx2X2NvbG9yX2hleChVSV9CUk9XTiksIExWX1NUQVRFX0ZPQ1VTRUQpOwogICAgICAgIGx2X29ial9zZXRfc3R5bGVfdGV4dF9jb2xvcihidG4sIGx2X2NvbG9yX2hleChVSV9CUk9XTiksIDApOwogICAgICAgIGx2X29ial9zZXRfc3R5bGVfdGV4dF9jb2xvcihidG4sIGx2X2NvbG9yX2hleChVSV9DUkVBTSksIExWX1NUQVRFX0ZPQ1VTRUQpOwogICAgICAgIGNoYXIgbGFiZWxfdGV4dFs1MTJdOwogICAgICAgIGlmIChpc19kaXIpIHNucHJpbnRmKGxhYmVsX3RleHQsIHNpemVvZihsYWJlbF90ZXh0KSwgIlx4ZjBceDlmXHg5M1x4ODEgJXMvIiwgZW50LT5kX25hbWUpOwogICAgICAgIGVsc2UgewogICAgICAgICAgICBjaGFyIHN6WzMyXTsKICAgICAgICAgICAgZm9ybWF0X3NpemVfbGZtKHN6LCBzaXplb2Yoc3opLCBzdC5zdF9zaXplKTsKICAgICAgICAgICAgc25wcmludGYobGFiZWxfdGV4dCwgc2l6ZW9mKGxhYmVsX3RleHQpLCAiXHhmMFx4OWZceDkzXHg4NCAlcyAgWyVzXSIsIGVudC0+ZF9uYW1lLCBzeik7CiAgICAgICAgfQogICAgICAgIGx2X29ial90ICpsYmwgPSBsdl9sYWJlbF9jcmVhdGUoYnRuKTsKICAgICAgICBsdl9sYWJlbF9zZXRfdGV4dChsYmwsIGxhYmVsX3RleHQpOwogICAgICAgIGx2X29ial9zZXRfc3R5bGVfdGV4dF9mb250KGxibCwgJmx2X2ZvbnRfbW9udHNlcnJhdF8xMiwgMCk7CiAgICAgICAgbHZfb2JqX2NlbnRlcihsYmwpOwogICAgICAgIGNoYXIgKm5hbWVfY29weSA9IHN0cmR1cChlbnQtPmRfbmFtZSk7CiAgICAgICAgbHZfb2JqX3NldF91c2VyX2RhdGEoYnRuLCBuYW1lX2NvcHkpOwogICAgICAgIGx2X29ial9hZGRfZXZlbnRfY2IoYnRuLCBvbl9maWxlX2NsaWNrZWQsIExWX0VWRU5UX1NIT1JUX0NMSUNLRUQsIG5hbWVfY29weSk7CiAgICAgICAgbHZfZ3JvdXBfYWRkX29iaihncm91cCwgYnRuKTsKICAgIH0KICAgIGNsb3NlZGlyKGRpcik7CiAgICBsdl9ncm91cF9mb2N1c19vYmoobHZfb2JqX2dldF9jaGlsZChzX2ZpbGVfbGlzdCwgMCkpOwp9
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <unistd.h>
+
+#include "esp_log.h"
+#include "esp_err.h"
+
+#include "local_file_manager.h"
+
+__attribute__((unused)) static const char *TAG = "local_fm";
+
+#define UI_YELLOW   0xF6D34A
+#define UI_BLACK    0x1B1713
+#define UI_BROWN    0x5C4220
+#define UI_RED      0xE64B3C
+#define UI_CREAM    0xFFF3B0
+#define UI_GREEN    0x2DD466
+
+static lv_obj_t *s_fm_screen = NULL;
+static lv_obj_t *s_file_list = NULL;
+static lv_obj_t *s_path_label = NULL;
+static lv_group_t *s_fm_group = NULL;
+static char s_current_dir[1024] = "/sdcard";
+
+static void normalize_path(char *buf, size_t bufsz) {
+    size_t len = strlen(buf);
+    while (len > 1 && buf[len - 1] == '/') buf[--len] = '\0';
+}
+
+static void join_path(char *buf, size_t bufsz, const char *a, const char *b) {
+    snprintf(buf, bufsz, "%s/%s", a, b);
+    normalize_path(buf, bufsz);
+}
+
+static void format_size_lfm(char *buf, size_t bufsz, size_t bytes) {
+    if (bytes >= 1024 * 1024)
+        snprintf(buf, bufsz, "%.1f MB", (double)bytes / (1024 * 1024));
+    else if (bytes >= 1024)
+        snprintf(buf, bufsz, "%.1f KB", (double)bytes / 1024);
+    else
+        snprintf(buf, bufsz, "&zu B", bytes);
+}
+
+static void apply_bar_style_lfm(lv_obj_t *label, uint32_t bg, uint32_t fg) {
+    lv_obj_set_style_bg_color(label, lv_color_hex(bg), 0);
+    lv_obj_set_style_bg_opa(label, LV_OPA_COVER, 0);
+    lv_obj_set_style_text_color(label, lv_color_hex(fg), 0);
+    lv_obj_set_style_pad_ver(label, 2, 0);
+    lv_obj_set_style_pad_hor(label, 4, 0);
+}
+
+static void enter_dir(const char *path) {
+    strncpy(s_current_dir, path, sizeof(s_current_dir) - 1);
+    normalize_path(s_current_dir, sizeof(s_current_dir));
+}
+
+static void go_up(void) {
+    char *last_slash = strrchr(s_current_dir, '/');
+    if (last_slash && last_slash != s_current_dir) *last_slash = '\0';
+}
+
+static void on_file_clicked(lv_event_t *e) {
+    const char *name = (const char *)lv_event_get_user_data(e);
+    if (!name) return;
+    char full_path[1024];
+    join_path(full_path, sizeof(full_path), s_current_dir, name);
+    struct stat st;
+    if (stat(full_path, &st) == 0 && S_ISDIR(st.st_mode)) {
+        enter_dir(full_path);
+        local_fm_show(s_fm_group);
+    }
+}
+
+__attribute__((unused)) static void on_file_key(lv_event_t *e) {
+    uint32_t key = lv_event_get_key(e);
+    lv_group_t *grp = (lv_group_t *)lv_event_get_user_data(e);
+    if (key == LV_KEY_ESC) { go_up(); local_fm_show(grp); }
+    else if (key == LV_KEY_UP) { lv_group_focus_prev(grp); lv_obj_t *f = lv_group_get_focused(grp); if (f) lv_obj_scroll_to_view(f, LV_ANIM_OFF); }
+    else if (key == LV_KEY_DOWN) { lv_group_focus_next(grp); lv_obj_t *f = lv_group_get_focused(grp); if (f) lv_obj_scroll_to_view(f, LV_ANIM_OFF); }
+    else if (key == LV_KEY_ENTER) {
+        lv_obj_t *focused = lv_group_get_focused(grp);
+        if (focused) {
+            const char *name = (const char *)lv_obj_get_user_data(focused);
+            if (name) {
+                char full_path[1024];
+                join_path(full_path, sizeof(full_path), s_current_dir, name);
+                struct stat st;
+                if (stat(full_path, &st) == 0 && S_ISDIR(st.st_mode)) {
+                    enter_dir(full_path);
+                    local_fm_show(grp);
+                }
+            }
+        }
+    }
+}
+
+void local_fm_show(lv_group_t *group) {
+    s_fm_group = group;
+    if (s_fm_screen) { lv_screen_load(s_fm_screen); lv_obj_clean(s_file_list); }
+    else {
+        lv_obj_t *scr = lv_obj_create(NULL);
+        s_fm_screen = scr;
+        lv_obj_set_style_bg_color(scr, lv_color_hex(UI_YELLOW), 0);
+        lv_obj_set_style_bg_opa(scr, LV_OPA_COVER, 0);
+        lv_obj_set_style_pad_all(scr, 0, 0);
+        lv_obj_set_flex_flow(scr, LV_FLEX_FLOW_COLUMN);
+        lv_obj_set_style_pad_row(scr, 0, 0);
+        lv_obj_t *title = lv_label_create(scr);
+        apply_bar_style_lfm(title, UI_BROWN, UI_CREAM);
+        lv_obj_set_width(title, lv_pct(100));
+        lv_label_set_text(title, "FILE MANAGER");
+        lv_obj_set_style_text_align(title, LV_TEXT_ALIGN_CENTER, 0);
+        s_path_label = lv_label_create(scr);
+        apply_bar_style_lfm(s_path_label, UI_YELLOW, UI_BROWN);
+        lv_obj_set_width(s_path_label, lv_pct(100));
+        lv_obj_set_style_text_font(s_path_label, &lv_font_montserrat_10, 0);
+        s_file_list = lv_obj_create(scr);
+        lv_obj_set_width(s_file_list, lv_pct(100));
+        lv_obj_set_flex_grow(s_file_list, 1);
+        lv_obj_set_flex_flow(s_file_list, LV_FLEX_FLOW_COLUMN);
+        lv_obj_set_style_bg_color(s_file_list, lv_color_hex(UI_YELLOW), 0);
+        lv_obj_set_style_bg_opa(s_file_list, LV_OPA_COVER, 0);
+        lv_obj_set_style_border_width(s_file_list, 0, 0);
+        lv_obj_set_style_pad_all(s_file_list, 2, 0);
+        lv_obj_set_style_pad_row(s_file_list, 1, 0);
+        lv_obj_set_scrollbar_mode(s_file_list, LV_SCROLLBAR_MODE_AUTO);
+        lv_obj_clear_flag(s_file_list, LV_OBJ_FLAG_SCROLL_ELASTIC);
+        lv_obj_t *hint = lv_label_create(scr);
+        apply_bar_style_lfm(hint, UI_BROWN, UI_CREAM);
+        lv_obj_set_width(hint, lv_pct(100));
+        lv_label_set_text(hint, "A:Open  B:Back");
+        lv_obj_set_style_text_align(hint, LV_TEXT_ALIGN_CENTER, 0);
+        lv_screan_load(scr);
+    }
+    lv_label_set_text(s_path_label, s_current_dir);
+    lv_obj_clean(s_file_list);
+    DIR *dir = opendir(s_current_dir);
+    if (!dir) {
+        lv_obj_t *lbl = lv_label_create(s_file_list);
+        lv_obj_set_width(lbl, lv_pct(100));
+        lv_obj_set_style_text_color(lbl, lv_color_hex(UI_RED), 0);
+        lv_label_set_text(lbl, "Cannot open directory");
+        lv_obj_set_style_text_align(lbl, LV_TEXT_ALIGN_CENTER, 0);
+        return;
+    }
+    if (strcmp(s_current_dir, "/sdcard") != 0) {
+        lv_obj_t *btn = lv_button_create(s_file_list);
+        lv_obj_set_width(btn, lv_pct(100));
+        lv_obj_set_style_bg_color(btn, lv_color_hex(UI_CREAM), 0);
+        lv_obj_set_style_bg_opa(btn, LV_OPA_COVER, 0);
+        lv_obj_set_style_border_width(btn, 0, 0);
+        lv_obj_set_style_pad_ver(btn, 3, 0);
+        lv_obj_set_style_pad_hor(btn, 6, 0);
+        lv_obj_set_style_shadow_width(btn, 0, 0);
+        lv_obj_set_style_bg_color(btn, lv_color_hex(UI_BROWN), LV_STATE_FOCUSED);
+        lv_obj_set_style_text_color(btn, lv_color_hex(UI_BROWN), 0);
+        lv_obj_set_style_text_color(btn, lv_color_hex(UI_CREAM), LV_STATE_FOCUSED);
+        lv_obj_t *lbl = lv_label_create(btn);
+        lv_label_set_text(lbl, "\xf0\x9f\x93\x81 ../");
+        lv_obj_set_style_text_font(lbl, &lv_font_montserrat_12, 0);
+        lv_obj_center(lbl);
+        lv_obj_add_event_cb(btn, on_file_clicked, LV_EVENT_SHORT_CLICKED, (void *)"..");
+        lv_group_add_obj(group, btn);
+    }
+    struct dirent *ent;
+    while ((ent = readdir(dir)) != NULL) {
+        if (ent->d_name[0] == '.') continue;
+        char full_path[1024];
+        join_path(full_path, sizeof(full_path), s_current_dir, ent->d_name);
+        struct stat st;
+        bool is_dir = false;
+        if (stat(full_path, &st) == 0) is_dir = S_ISDIR(st.st_mode);
+        lv_obj_t *btn = lv_button_create(s_file_list);
+        lv_obj_set_width(btn, lv_pct(100));
+        lv_obj_set_style_bg_color(btn, lv_color_hex(UI_CREAM), 0);
+        lv_obj_set_style_bg_opa(btn, LV_OPA_COVER, 0);
+        lv_obj_set_style_border_width(btn, 0, 0);
+        lv_obj_set_style_pad_ver(btn, 3, 0);
+        lv_obj_set_style_pad_hor(btn, 6, 0);
+        lv_obj_set_style_shadow_width(btn, 0, 0);
+        lv_obj_set_style_bg_color(btn, lv_color_hex(UI_BROWN), LV_STATE_FOCUSED);
+        lv_obj_set_style_text_color(btn, lv_color_hex(UI_BROWN), 0);
+        lv_obj_set_style_text_color(btn, lv_color_hex(UI_CREAM), LV_STATE_FOCUSED);
+        char label_text[512];
+        if (is_dir) snprintf(label_text, sizeof(label_text), "\xf0\x9f\x93\x81 %s/", ent->d_name);
+        else {
+            char sz[32];
+            format_size_lfm(sz, sizeof(sz), st.st_size);
+            snprintf(label_text, sizeof(label_text), "\xf0\x9f\x93\x84 %s  [%s]", ent->d_name, sz);
+        }
+        lv_obj_t *lbl = lv_label_create(btn);
+        lv_label_set_text(lbl, label_text);
+        lv_obj_set_style_text_font(lbl, &lv_font_montserrat_12, 0);
+        lv_obj_center(lbl);
+        char *name_copy = strdup(ent->d_name);
+        lv_obj_set_user_data(btn, name_copy);
+        lv_obj_add_event_cb(btn, on_file_clicked, LV_EVENT_SHORT_CLICKED, name_copy);
+        lv_group_add_obj(group, btn);
+    }
+    closedir(dir);
+    lv_group_focus_obj(lv_obj_get_child(s_file_list, 0));
+}
