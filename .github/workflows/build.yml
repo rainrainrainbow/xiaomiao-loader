@@ -1,0 +1,68 @@
+name: Build Firmware
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    
+    - name: Install ESP-IDF
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y git wget flex bison gperf python3-pip python3-venv cmake ninja-build ccache libffi-dev libssl-dev dfu-util
+        git clone -b v5.3.1 --recursive https://github.com/espressif/esp-idf.git
+        cd esp-idf
+        ./install.sh esp32
+        source export.sh
+        echo "IDF_PATH=$PWD" >> $GITHUB_ENV
+        echo "$PWD/tools" >> $GITHUB_PATH
+    
+    - name: Build firmware
+      run: |
+        source $IDF_PATH/export.sh
+        idf.py set-target esp32
+        idf.py build
+    
+    - name: Generate merged binary
+      run: |
+        source $IDF_PATH/export.sh
+        idf.py merge-bin -o xiaomiao-loader-merged.bin
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: xiaomiao-loader-firmware
+        path: |
+          build/xiaomiao-loader.bin
+          xiaomiao-loader-merged.bin
+          build/partition_table/partition-table.bin
+          build/bootloader/bootloader.bin
+        retention-days: 30
+    
+    - name: Create release
+      if: github.ref == 'refs/heads/main'
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          build/xiaomiao-loader.bin
+          xiaomiao-loader-merged.bin
+        tag_name: v${{ github.run_number }}
+        name: Release ${{ github.run_number }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

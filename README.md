@@ -1,35 +1,84 @@
-# Xiaomiao ROM Loader
+# Xiaomiao ROM Loader (Lightweight Version)
 
-学而思小喵掌机的 ROM 选择器固件。烧入 factory 分区后常驻，从 TF 卡选择 ROM 镜像并加载到 ota_0 分区运行。日常开机直接续玩上次的 ROM（Loader 快速启动，跳过菜单）；按住 B 键开机进入 Loader 菜单切换 ROM。
+学而思小喵掌机的 ROM 选择器固件。支持 WiFi 文件管理和本地文件浏览。
 
-## 工作原理
+## 主要特性
 
-```mermaid
-flowchart TD
-    A[上电 / Reset] --> B[Bootloader 启动]
-    B --> B1[SD 卡复位 80 dummy clock]
-    B1 --> C{B 键 GPIO12 按下?}
-    C -->|是| D[擦除 otadata]
-    C -->|否| E[读 otadata 选启动分区]
-    D --> E
-    E --> F{otadata 指向 OTA 槽?}
-    F -->|是 ota_0/ota_1| G[直接启动 ROM]
-    F -->|否 空白/已擦除| H[启动 factory — Loader]
-    H --> I{ota_0 有有效 ROM\n且 B 未按?}
-    I -->|是 快速启动| J[set_boot ota_0 重启]
-    J --> G
-    I -->|否| K[扫描 /sdcard/boot\n .bin / .img]
-    K --> L[LVGL 显示 ROM 列表]
-    L --> M[选 ROM 按 A]
-    M --> N{已在 ota_0 且 NVS 匹配?}
-    N -->|是| O[跳过写入 零擦写]
-    N -->|否| P[提取 app 写入 ota_0\n.img 同时写 ota_1]
-    O --> Q[set_boot ota_0\n卸载 SD 重启]
-    P --> Q
-    Q --> G
+- ✅ **轻量级 UI**：移除 LVGL 依赖，使用自定义 framebuffer 渲染
+- ✅ **WiFi 文件管理器**：通过 Web 界面管理 SD 卡文件
+- ✅ **本地文件浏览**：设备端浏览和删除文件
+- ✅ **ROM 选择器**：从 SD 卡选择 ROM 镜像并加载
+- ✅ **OTA 写入**：将 ROM 写入 ota_0 分区并重启
+
+## 硬件要求
+
+- ESP32-WROVER-B（4MB Flash, 8MB PSRAM）
+- ST7735 SPI TFT 160x128（RGB565）
+- MicroSD 卡槽
+- 6 键导航（上/下/左/右/A/B）
+
+## 引脚定义
+
+```
+LCD:
+  CS:   GPIO5
+  DC:   GPIO4
+  CLK:  GPIO18
+  MOSI: GPIO23
+  RST:  -1 (未使用)
+
+SD Card:
+  CS:   GPIO22
+  MOSI: GPIO23 (共享)
+  MISO: GPIO19
+  CLK:  GPIO18 (共享)
+
+Buttons:
+  UP:    GPIO32
+  DOWN:  GPIO33
+  LEFT:  GPIO25
+  RIGHT: GPIO26
+  A:     GPIO27
+  B:     GPIO12
 ```
 
-**快速启动**：Loader（factory）启动时若 ota_0 已有有效 ROM、且未按住 B 键，会立即 `set_boot(ota_0)` 重启，跳过 LCD/LVGL 初始化以减少启动延迟。因此日常 Reset 默认续玩上次 ROM，只有按住 B 开机才进入菜单。
+## 使用方法
+
+### 1. 准备 SD 卡
+
+在 SD 卡根目录创建 `boot` 文件夹，将 ROM 镜像（`.bin` 或 `.img`）放入其中。
+
+### 2. 烧录固件
+
+```bash
+# 使用 esptool 烧录
+esptool.py --chip esp32 -b 460800 write_flash 0x0 xiaomiao-loader-merged.bin
+```
+
+### 3. 启动设备
+
+- **正常启动**：进入 ROM 选择界面
+- **按住 B 键启动**：进入 WiFi 文件管理模式
+
+### 4. 操作说明
+
+#### ROM 选择界面
+- **上/下键**：选择 ROM
+- **A 键**：加载选中的 ROM
+- **B 键**：进入 WiFi 文件管理模式
+- **左键**：进入本地文件浏览器
+
+#### WiFi 文件管理模式
+1. 设备会创建 WiFi 热点：
+   - SSID: `Xiaomiao-Loader`
+   - 密码: `12345678`
+2. 手机/电脑连接该 WiFi
+3. 访问 `http://192.168.4.1`
+4. 通过 Web 界面：
+   - 浏览 SD 卡文件
+   - 上传新 ROM
+   - 下载/删除文件
+5. 再次按 B 键退出 WiFi 模式
 
 ## 分区表
 
@@ -37,76 +86,69 @@ flowchart TD
 |------|------|------|------|
 | bootloader | 0x1000 | ~30KB | ESP-IDF bootloader |
 | partition_table | 0x8000 | 4KB | 分区表 |
-| nvs | 0xA000 | 20KB | Loader 存储 ROM 状态 |
+| nvs | 0xA000 | 20KB | 存储 ROM 状态 |
 | phy_init | 0xF000 | 4KB | PHY 校准 |
-| **factory** | **0x10000** | **568KB** | **Loader 固件（永不覆写）** |
+| **factory** | **0x10000** | **568KB** | **Loader 固件** |
 | otadata | 0x9E000 | 8KB | 启动分区选择 |
-| **launcher** | **0xA0000** | **2.12MB** | **ROM 运行槽 (ota_0) / retro-go launcher** |
+| **launcher** | **0xA0000** | **2.12MB** | **ROM 运行槽 (ota_0)** |
 | **retro-core** | **0x2C0000** | **1.25MB** | **retro-go 模拟器核心 (ota_1)** |
-
-`launcher` / `retro-core` 是分区标签，子类型分别为 `ota_0` / `ota_1`。`retro-core` 这个名字是 retro-go 通过 `esp_partition_find_first` 按名查找的，必须一致。
 
 ## 构建
 
-需要 ESP-IDF v5.5.4 + Python 3.12+，LVGL 9.5.0（由 idf component manager 自动拉取）。
+### 本地构建
+
+需要 ESP-IDF v5.3.1+：
 
 ```bash
-# 一键构建（编译 + 生成 merged.bin）
-./build.sh
+# 设置环境
+. ~/esp/esp-idf/export.sh
 
-# 或手动构建
+# 构建
+idf.py set-target esp32
 idf.py build
+
+# 生成合并固件
 idf.py merge-bin -o xiaomiao-loader-merged.bin
 ```
 
-## 烧录
+### GitHub Actions 自动构建
 
-```bash
-# 通过 USB（GD32 UART 桥）
-idf.py -p /dev/ttyACM0 flash
+每次推送到 main 分支会自动触发构建，生成的固件可在 Actions 页面下载。
 
-# 或用 esptool
-esptool.py --chip esp32 -b 460800 write_flash 0x0 build/xiaomiao-loader-merged.bin
-```
+## 与原版差异
 
-烧录接口始终可用——Loader 不触碰 bootloader 和分区表，esptool 可随时重新烧录。
+| 特性 | 原版 | 轻量版 |
+|------|------|--------|
+| UI 框架 | LVGL 9.5.0 | 自定义 framebuffer |
+| Flash 占用 | ~400KB | ~200KB |
+| WiFi 文件管理 | ❌ | ✅ |
+| 本地文件浏览 | ❌ | ✅ |
+| 分区表 | 相同 | 相同 |
+| ROM 兼容性 | 相同 | 相同 |
 
-## 使用
+## 故障排除
 
-1. 把 ROM 镜像（`.bin` 或 `.img`）放入 TF 卡的 `/sdcard/boot/` 目录
-2. 正常开机：直接运行上次加载的 ROM（Loader 快速启动，跳过菜单）
-3. 按住 **B 键**开机：进入 Loader 菜单，上下键选择 ROM，A 键加载
-4. 已加载的 ROM 前面显示 `>` 标记，重复选择时跳过写入（零擦写）
-5. 左键查看系统信息
+### SD 卡无法挂载
+- 检查 SD 卡格式（FAT32）
+- 确认引脚连接正确
+- 查看串口日志
 
-> 按住 B 开机时，bootloader（自定义 `sd_reset` 组件）擦除 otadata 回退到 factory，此时 nvs 保留、已加载标记仍在。长按 B 超过 5 秒会触发 IDF 内置硬恢复出厂，额外擦除 nvs，已加载标记会丢失。
+### WiFi 无法启动
+- 检查 sdkconfig 中 WiFi 配置
+- 确认 PSRAM 正常工作
+- 查看可用内存
 
-## ROM 兼容性
+### ROM 加载失败
+- 确认 ROM 格式正确（app-only bin 或 merged bin）
+- 检查 ROM 大小不超过 2.12MB
+- 查看串口日志错误信息
 
-扫描 `/sdcard/boot/` 目录，匹配 `.bin` 和 `.img` 扩展名（不区分大小写），最多 32 个。Loader 自动识别三种格式：
+## 许可证
 
-- **App-only bin**（magic `0xE9` 在 0x0）：直接写入
-- **Merged bin**（app 在 0x10000）：自动定位并提取 app 段
-- **Full-flash 镜像**（`.img` / `.bin`）：retro-go 完整镜像，解析内嵌分区表（先试 0x9000，再回退 0x8000），按标签提取 launcher 与 retro-core
+MIT License
 
-ROM 大小上限：2.12MB（ota_0 / launcher）。
+## 致谢
 
-### retro-go 双 app 加载
-
-Loader 能直接加载从网络下载的 retro-go 完整镜像（无需重新编译）。镜像内分区表须包含 `launcher` 和 `retro-core` 两个 app 分区。加载后：
-
-- launcher 写入 `ota_0`，retro-core 写入 `ota_1`（依次 `set_boot` 注册到 otadata，使 retro-go 的 `have_app()` 能识别核心）
-- launcher 启动后识别 ota_1 上的核心，按 SD 卡的 ROM 列表生成模拟器 tab
-- 选游戏后 launcher 通过 OTA 切换到 retro-core 运行
-- SD 卡在每次 bootloader 启动时由 `sd_reset` 组件复位（80 dummy clock），确保 retro-core 能正常挂载 TF 卡
-
-**分区表 offset 约束**：Loader 的 `CONFIG_PARTITION_TABLE_OFFSET` 必须和 retro-go 一致（0x8000）。这是 ESP-IDF 的编译时常量——如果两者不一致，retro-go launcher 会读不到分区表。Loader 通过缩小 bootloader 释出 0x8000 位置来满足此约束。
-
-## 目标硬件
-
-- ESP32-WROVER-B（4MB Flash, 8MB PSRAM）
-- ST7735 SPI TFT 160x128（旋转 90°，原生 128x160）
-- MicroSD（与 LCD 共享 SPI2）
-- 6 键导航
-
-硬件资料和原理图见 [xueersi-idf](https://github.com/ZyoungInc/xueersi-idf)。
+- 原版 Xiaomiao Loader 作者
+- ESP-IDF 团队
+- 社区贡献者
