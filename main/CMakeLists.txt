@@ -1,17 +1,5 @@
-idf_component_register(SRCS "main.c"
-                       PRIV_REQUIRES esp_lcd
-                                     esp_timer
-                                     esp_driver_gpio
-                                     esp_driver_spi
-                                     esp_driver_sdspi
-                                     esp_hw_support
-                                     heap
-                                     spi_flash
-                                     fatfs
-                                     sdmmc
-                                     lvgl
-                                     app_update
-                                     nvs_flash
-                       INCLUDE_DIRS "")
-
-target_link_libraries(${COMPONENT_LIB} PRIVATE m)
+idf_component_register(
+    SRCS "main.c" "wifi_fileman.c"
+    INCLUDE_DIRS "."
+    REQUIRES driver esp_lcd esp_wifi esp_http_server nvs_flash esp_partition esp_ota_ops esp_vfs_fat sdmmc
+)
