@@ -24,7 +24,7 @@
 #include "driver/gpio.h"
 #include "driver/spi_master.h"
 #include "esp_lcd_panel_io.h"
-#include "esp_lcd_panel_io_spi.h"
+#include "esp_lcd_panel_vendor.h"
 #include "esp_vfs_fat.h"
 #include "sdmmc_cmd.h"
 
