@@ -62,7 +62,7 @@ static const char *TAG = "loader";
 /* ROM entry */
 typedef struct {
     char name[64];
-    char path[128];
+    char path[300];  /* Increased to avoid truncation */
     size_t size;
 } rom_entry_t;
 
@@ -214,7 +214,8 @@ static void scan_roms(void)
 
         rom_entry_t *rom = &rom_list[rom_count];
         strncpy(rom->name, ent->d_name, sizeof(rom->name) - 1);
-        snprintf(rom->path, sizeof(rom->path), "/sdcard/boot/%s", ent->d_name);
+        rom->name[sizeof(rom->name) - 1] = '\0';
+        snprintf(rom->path, sizeof(rom->path), "/sdcard/boot/%.250s", ent->d_name);
         
         struct stat st;
         if (stat(rom->path, &st) == 0) {
@@ -253,8 +254,8 @@ static void ui_draw_main(void)
             
             ui_fill_rect(0, y, SCREEN_W, 16, bg);
             
-            char line[64];
-            snprintf(line, sizeof(line), "%c %s", 
+            char line[80];
+            snprintf(line, sizeof(line), "%c %.60s", 
                      selected ? '>' : ' ', rom_list[idx].name);
             ui_text(2, y + 4, line, fg, bg);
             
