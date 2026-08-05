@@ -20,11 +20,12 @@ static const char *TAG = "wifi_fileman";
 
 static httpd_handle_t server = NULL;
 
-/* Helper: send HTTP error response */
-static esp_err_t httpd_resp_send_err(httpd_req_t *req, httpd_err_code_t err, const char *msg)
+/* Helper: send HTTP error response (renamed to avoid conflict with esp_http_server) */
+static esp_err_t send_error(httpd_req_t *req, const char *msg)
 {
     char err_str[128];
     snprintf(err_str, sizeof(err_str), "{\"error\": \"%s\"}", msg ? msg : "Unknown error");
+    httpd_resp_set_status(req, "400 Bad Request");
     httpd_resp_send(req, err_str, strlen(err_str));
     return ESP_OK;
 }
@@ -52,7 +53,7 @@ static const char *html_header =
     "input[type=file]{margin:10px 0}"
     "a{color:#3498db}"
     "</style></head><body>"
-    "<h1>🐱 Xiaomiao File Manager</h1>";
+    "<h1>Xiaomiao File Manager</h1>";
 
 static const char *html_footer = "</body></html>";
 
@@ -94,15 +95,13 @@ static esp_err_t root_get_handler(httpd_req_t *req)
     char query[256] = "";
     
     /* Get path from query string */
-    if (req->uri) {
-        const char *q = strchr(req->uri, '?');
-        if (q && strncmp(q, "?path=", 6) == 0) {
-            url_decode(query, q + 6, sizeof(query));
-        }
+    const char *q = strchr(req->uri, '?');
+    if (q && strncmp(q, "?path=", 6) == 0) {
+        url_decode(query, q + 6, sizeof(query));
     }
     
     if (strlen(query) > 0) {
-        snprintf(path, sizeof(path), "%s%s", SD_ROOT, query);
+        snprintf(path, sizeof(path), "%.400s%.100s", SD_ROOT, query);
     } else {
         snprintf(path, sizeof(path), "%s", SD_ROOT);
     }
@@ -112,7 +111,7 @@ static esp_err_t root_get_handler(httpd_req_t *req)
     int len = 0;
     
     len += snprintf(html + len, sizeof(html) - len, "%s", html_header);
-    len += snprintf(html + len, sizeof(html) - len, "<div class='path'>📁 %s</div>", path);
+    len += snprintf(html + len, sizeof(html) - len, "<div class='path'>%s</div>", path);
     len += snprintf(html + len, sizeof(html) - len, "<ul class='file-list'>");
     
     /* Parent directory link */
@@ -128,7 +127,7 @@ static esp_err_t root_get_handler(httpd_req_t *req)
             }
         }
         len += snprintf(html + len, sizeof(html) - len, 
-            "<li class='file-item'><span class='file-icon'>📁</span>"
+            "<li class='file-item'><span class='file-icon'>[..]</span>"
             "<span class='file-name'><a href='/?path=%s'>..</a></span></li>", parent);
     }
     
@@ -140,12 +139,12 @@ static esp_err_t root_get_handler(httpd_req_t *req)
             if (ent->d_name[0] == '.') continue;
             
             char fullpath[600];
-            snprintf(fullpath, sizeof(fullpath), "%s/%s", path, ent->d_name);
+            snprintf(fullpath, sizeof(fullpath), "%.400s/%.150s", path, ent->d_name);
             struct stat st;
             stat(fullpath, &st);
             
             char relpath[512];
-            snprintf(relpath, sizeof(relpath), "%s/%s", 
+            snprintf(relpath, sizeof(relpath), "%.400s/%.100s", 
                      strlen(query) > 0 ? query : "", ent->d_name);
             
             bool is_dir = S_ISDIR(st.st_mode);
@@ -155,17 +154,17 @@ static esp_err_t root_get_handler(httpd_req_t *req)
             if (is_dir) {
                 len += snprintf(html + len, sizeof(html) - len,
                     "<li class='file-item'>"
-                    "<span class='file-icon'>📁</span>"
+                    "<span class='file-icon'>[D]</span>"
                     "<span class='file-name'><a href='/?path=%s'>%s</a></span>"
                     "</li>", relpath, ent->d_name);
             } else {
                 len += snprintf(html + len, sizeof(html) - len,
                     "<li class='file-item'>"
-                    "<span class='file-icon'>📄</span>"
+                    "<span class='file-icon'>[F]</span>"
                     "<span class='file-name'>%s</span>"
                     "<span class='file-size'>%s</span>"
-                    "<a class='btn btn-download' href='/download?file=%s'>下载</a>"
-                    "<a class='btn btn-delete' href='/delete?file=%s'>删除</a>"
+                    "<a class='btn btn-download' href='/download?file=%s'>DL</a> "
+                    "<a class='btn btn-delete' href='/delete?file=%s'>DEL</a>"
                     "</li>", ent->d_name, size_str, relpath, relpath);
             }
             
@@ -179,11 +178,11 @@ static esp_err_t root_get_handler(httpd_req_t *req)
     /* Upload form */
     len += snprintf(html + len, sizeof(html) - len,
         "<div class='upload-form'>"
-        "<h3>📤 上传文件</h3>"
+        "<h3>Upload File</h3>"
         "<form action='/upload' method='POST' enctype='multipart/form-data'>"
-        "<input type='hidden' name='path' value='%s'>"
+        "<input type='hidden' name='path' value='%.200s'>"
         "<input type='file' name='file'>"
-        "<button type='submit' class='btn btn-download'>上传</button>"
+        "<button type='submit' class='btn btn-download'>Upload</button>"
         "</form></div>", query);
     
     len += snprintf(html + len, sizeof(html) - len, "%s", html_footer);
@@ -201,21 +200,21 @@ static esp_err_t download_get_handler(httpd_req_t *req)
     
     const char *q = strchr(req->uri, '?');
     if (!q || strncmp(q, "?file=", 6) != 0) {
-        return httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Missing file parameter");
+        return send_error(req, "Missing file parameter");
     }
     
     url_decode(query, q + 6, sizeof(query));
-    snprintf(path, sizeof(path), "%s%s", SD_ROOT, query);
+    snprintf(path, sizeof(path), "%.400s%.100s", SD_ROOT, query);
     
     FILE *f = fopen(path, "rb");
     if (!f) {
-        return httpd_resp_send_err(req, HTTPD_404_NOT_FOUND, "File not found");
+        return send_error(req, "File not found");
     }
     
     /* Get filename */
     const char *filename = strrchr(path, '/') + 1;
     char content_disp[128];
-    snprintf(content_disp, sizeof(content_disp), "attachment; filename=\"%s\"", filename);
+    snprintf(content_disp, sizeof(content_disp), "attachment; filename=\"%.80s\"", filename);
     httpd_resp_set_hdr(req, "Content-Disposition", content_disp);
     httpd_resp_set_hdr(req, "Content-Type", "application/octet-stream");
     
@@ -239,11 +238,11 @@ static esp_err_t delete_get_handler(httpd_req_t *req)
     
     const char *q = strchr(req->uri, '?');
     if (!q || strncmp(q, "?file=", 6) != 0) {
-        return httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Missing file parameter");
+        return send_error(req, "Missing file parameter");
     }
     
     url_decode(query, q + 6, sizeof(query));
-    snprintf(path, sizeof(path), "%s%s", SD_ROOT, query);
+    snprintf(path, sizeof(path), "%.400s%.100s", SD_ROOT, query);
     
     if (remove(path) == 0) {
         /* Redirect back to parent directory */
@@ -251,7 +250,7 @@ static esp_err_t delete_get_handler(httpd_req_t *req)
         char *last_slash = strrchr(query, '/');
         if (last_slash) {
             *last_slash = '\0';
-            snprintf(redirect, sizeof(redirect), "/?path=%s", query);
+            snprintf(redirect, sizeof(redirect), "/?path=%.200s", query);
         } else {
             snprintf(redirect, sizeof(redirect), "/");
         }
@@ -259,7 +258,7 @@ static esp_err_t delete_get_handler(httpd_req_t *req)
         httpd_resp_set_status(req, "302 Found");
         httpd_resp_send(req, NULL, 0);
     } else {
-        return httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Failed to delete file");
+        return send_error(req, "Failed to delete file");
     }
     
     return ESP_OK;
@@ -268,19 +267,19 @@ static esp_err_t delete_get_handler(httpd_req_t *req)
 /* POST /upload - Upload file */
 static esp_err_t upload_post_handler(httpd_req_t *req)
 {
-    char buf[1024];
-    int received = 0;
     int remaining = req->content_len;
     
     if (remaining > 512 * 1024) {
-        return httpd_resp_send_err(req, HTTPD_413_PAYLOAD_TOO_LARGE, "File too large (max 512KB)");
+        return send_error(req, "File too large (max 512KB)");
     }
     
     char *content = malloc(remaining + 1);
     if (!content) {
-        return httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Out of memory");
+        return send_error(req, "Out of memory");
     }
     
+    char buf[1024];
+    int received = 0;
     while (remaining > 0) {
         int ret = httpd_req_recv(req, buf, sizeof(buf));
         if (ret <= 0) break;
@@ -297,7 +296,7 @@ static esp_err_t upload_post_handler(httpd_req_t *req)
     
     if (!path_start || !file_start || !filename_start) {
         free(content);
-        return httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Invalid form data");
+        return send_error(req, "Invalid form data");
     }
     
     /* Extract path */
@@ -331,29 +330,29 @@ static esp_err_t upload_post_handler(httpd_req_t *req)
     char *content_start = strstr(file_start, "\r\n\r\n");
     if (!content_start) {
         free(content);
-        return httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Invalid file data");
+        return send_error(req, "Invalid file data");
     }
     content_start += 4;
     
     char *content_end = strstr(content_start, "\r\n--");
     if (!content_end) {
         free(content);
-        return httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Invalid file data");
+        return send_error(req, "Invalid file data");
     }
     
     /* Build full path */
     char fullpath[600];
     if (strlen(path_value) > 0) {
-        snprintf(fullpath, sizeof(fullpath), "%s%s/%s", SD_ROOT, path_value, filename);
+        snprintf(fullpath, sizeof(fullpath), "%.400s%.100s/%.100s", SD_ROOT, path_value, filename);
     } else {
-        snprintf(fullpath, sizeof(fullpath), "%s/%s", SD_ROOT, filename);
+        snprintf(fullpath, sizeof(fullpath), "%.400s/%.100s", SD_ROOT, filename);
     }
     
     /* Write file */
     FILE *f = fopen(fullpath, "wb");
     if (!f) {
         free(content);
-        return httpd_resp_send_err(req, HTTPD_500_INTERNAL_SERVER_ERROR, "Cannot create file");
+        return send_error(req, "Cannot create file");
     }
     
     size_t content_len = content_end - content_start;
@@ -363,7 +362,7 @@ static esp_err_t upload_post_handler(httpd_req_t *req)
     
     /* Redirect back */
     char redirect[300];
-    snprintf(redirect, sizeof(redirect), "/?path=%s", path_value);
+    snprintf(redirect, sizeof(redirect), "/?path=%.200s", path_value);
     httpd_resp_set_hdr(req, "Location", redirect);
     httpd_resp_set_status(req, "302 Found");
     httpd_resp_send(req, NULL, 0);
