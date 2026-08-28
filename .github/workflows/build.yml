@@ -44,7 +44,13 @@ jobs:
       - name: Generate merged binary
         run: |
           . ~/esp/esp-idf/export.sh
-          idf.py merge-bin -o xiaomiao-loader-merged.bin
+          idf.py merge-bin -o build/xiaomiao-loader-merged.bin
+
+      - name: List build artifacts
+        run: |
+          echo "=== Build directory contents ==="
+          ls -lh build/*.bin 2>/dev/null || echo "No .bin files in build/"
+          ls -lh *.bin 2>/dev/null || echo "No .bin files in root"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -52,7 +58,7 @@ jobs:
           name: xiaomiao-loader-firmware
           path: |
             build/xiaomiao-loader.bin
-            xiaomiao-loader-merged.bin
+            build/xiaomiao-loader-merged.bin
             build/flash_args
           retention-days: 30
 
@@ -62,4 +68,4 @@ jobs:
         with:
           files: |
             build/xiaomiao-loader.bin
-            xiaomiao-loader-merged.bin
+            build/xiaomiao-loader-merged.bin
