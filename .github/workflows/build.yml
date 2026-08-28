@@ -41,18 +41,15 @@ jobs:
           . ~/esp/esp-idf/export.sh
           idf.py build
 
-      - name: Generate merged binary
+      - name: Generate merged binary (in build dir)
         run: |
           . ~/esp/esp-idf/export.sh
-          cd $GITHUB_WORKSPACE
-          idf.py merge-bin -o xiaomiao-loader-merged.bin
+          idf.py merge-bin   # creates build/xiaomiao-loader-merged.bin
 
       - name: List build artifacts
         run: |
-          echo "=== Build directory ==="
-          ls -lh build/*.bin 2>/dev/null || echo "No .bin in build/"
-          echo "=== Root directory ==="
-          ls -lh *.bin 2>/dev/null || echo "No .bin in root"
+          ls -lh build/*.bin
+          ls -lh *.bin 2>/dev/null || true
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -60,9 +57,11 @@ jobs:
           name: xiaomiao-loader-firmware
           path: |
             build/xiaomiao-loader.bin
-            xiaomiao-loader-merged.bin
+            build/xiaomiao-loader-merged.bin
             build/flash_args
-          if-no-files-found: warn
+            build/bootloader/bootloader.bin
+            build/partition_table/partition-table.bin
+          if-no-files-found: error
           retention-days: 30
 
       - name: Create Release (tags only)
@@ -71,4 +70,4 @@ jobs:
         with:
           files: |
             build/xiaomiao-loader.bin
-            xiaomiao-loader-merged.bin
+            build/xiaomiao-loader-merged.bin
