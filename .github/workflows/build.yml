@@ -41,15 +41,14 @@ jobs:
           . ~/esp/esp-idf/export.sh
           idf.py build
 
-      - name: Generate merged binary (in build dir)
+      - name: Generate merged binary (explicit name)
         run: |
           . ~/esp/esp-idf/export.sh
-          idf.py merge-bin   # creates build/xiaomiao-loader-merged.bin
+          idf.py merge-bin -o build/xiaomiao-loader-merged.bin
 
       - name: List build artifacts
         run: |
           ls -lh build/*.bin
-          ls -lh *.bin 2>/dev/null || true
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -61,6 +60,7 @@ jobs:
             build/flash_args
             build/bootloader/bootloader.bin
             build/partition_table/partition-table.bin
+            build/ota_data_initial.bin
           if-no-files-found: error
           retention-days: 30
 
