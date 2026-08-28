@@ -29,7 +29,7 @@ flowchart TD
     Q --> G
 ```
 
-**快速启动**：Loader（factory）启动时若 ota_0 已有有效 ROM、且未按住 B 键，会立即 `set_boot(ota_0)` 重启，跳过 LCD/LVGL 初始化以减少启动延迟。因此日常 Reset 默认续玩上次 ROM，只有按住 B 开机才进入菜单。
+**快速启动**：Loader（factory）启动时若 ota_0 已有有效 ROM、且未按住 B 键，会立即 `set_boot(ota_0)` 重启，跳过 LCD/LVGL 初始化以减少启动延迟。因此日常 Reset 默认续玩上次 ROM，只有按住 B 键开机才进入菜单。
 
 ## 分区表
 
@@ -41,8 +41,9 @@ flowchart TD
 | phy_init | 0xF000 | 4KB | PHY 校准 |
 | **factory** | **0x10000** | **568KB** | **Loader 固件（永不覆写）** |
 | otadata | 0x9E000 | 8KB | 启动分区选择 |
-| **launcher** | **0xA0000** | **2.12MB** | **ROM 运行槽 (ota_0) / retro-go launcher** |
-| **retro-core** | **0x2C0000** | **1.25MB** | **retro-go 模拟器核心 (ota_1)** |
+| **launcher** | **0xA0000** | **4MB** | **ROM 运行槽 (ota_0) / retro-go launcher** |
+| **retro-core** | **0x4A0000** | **2MB** | **retro-go 模拟器核心 (ota_1)** |
+| **storage** | **0x6A0000** | **9MB** | **FAT 文件系统（游戏存档 / retro-go 数据）** |
 
 `launcher` / `retro-core` 是分区标签，子类型分别为 `ota_0` / `ota_1`。`retro-core` 这个名字是 retro-go 通过 `esp_partition_find_first` 按名查找的，必须一致。
 
@@ -58,6 +59,13 @@ flowchart TD
 idf.py build
 idf.py merge-bin -o xiaomiao-loader-merged.bin
 ```
+
+### GitHub Actions 自动构建
+
+本仓库配置了 GitHub Actions，push 到 `main` 分支时自动编译并上传固件产物。
+产物包括：
+- `xiaomiao-loader.bin` — app-only 固件
+- `xiaomiao-loader-merged.bin` — 完整 flash 镜像（可直接 esptool 烧录）
 
 ## 烧录
 
@@ -89,7 +97,7 @@ esptool.py --chip esp32 -b 460800 write_flash 0x0 build/xiaomiao-loader-merged.b
 - **Merged bin**（app 在 0x10000）：自动定位并提取 app 段
 - **Full-flash 镜像**（`.img` / `.bin`）：retro-go 完整镜像，解析内嵌分区表（先试 0x9000，再回退 0x8000），按标签提取 launcher 与 retro-core
 
-ROM 大小上限：2.12MB（ota_0 / launcher）。
+ROM 大小上限：4MB（ota_0 / launcher）。
 
 ### retro-go 双 app 加载
 
@@ -104,7 +112,7 @@ Loader 能直接加载从网络下载的 retro-go 完整镜像（无需重新编
 
 ## 目标硬件
 
-- ESP32-WROVER-B（4MB Flash, 8MB PSRAM）
+- ESP32-WROVER-B（16MB Flash, 8MB PSRAM）
 - ST7735 SPI TFT 160x128（旋转 90°，原生 128x160）
 - MicroSD（与 LCD 共享 SPI2）
 - 6 键导航
